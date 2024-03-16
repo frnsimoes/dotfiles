@@ -1,0 +1,21 @@
+# change window focus within space
+ctrl + cmd - n : yabai -m window --focus west
+ctrl + cmd - m : yabai -m window --focus east
+
+# flip along y-axis
+ctrl + cmd - a : yabai -m space --mirror y-axis
+
+# toggle fullscreen
+ctrl + cmd - i : yabai -m window --toggle zoom-fullscreen
+
+# balance out tree of windows (resize to occupy same area)
+ctrl + cmd - x : yabai -m space --balance
+
+# move window to space #
+ralt - q : yabai -m window --space 1;
+ralt - w : yabai -m window --space 2;
+ralt - e : yabai -m window --space 3;
+ralt - r : yabai -m window --space 4;
+ralt - t : yabai -m window --space 5;
+ralt - y : yabai -m window --space 6;
+
