@@ -21,3 +21,17 @@ ralt - r : yabai -m window --space 4;
 ralt - t : yabai -m window --space 5;
 ralt - y : yabai -m window --space 6;
 
+# defines a new mode 'resize' with an on_enter command, that captures keypresses
+:: resize @ : yabai -m config active_window_opacity 1; yabai -m config normal_window_opacity 0.9;
+
+# (this is the key combination you want to use to enter resize mode)
+ctrl + cmd - r ; resize 
+
+# from 'resize' mode, activate mode 'default'
+# (this is the keypress required to leave resize mode)
+resize < escape ; default
+
+# increase window size
+resize < h : yabai -m window --resize right:-25:0
+resize < l : yabai -m window --resize right:25:0
+
