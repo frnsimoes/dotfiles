@@ -1,3 +1,5 @@
+# skhd--restart-service
+#
 # change window focus within space
 ctrl + cmd - n : yabai -m window --focus west
 ctrl + cmd - m : yabai -m window --focus east
@@ -9,7 +11,7 @@ ctrl + cmd - a : yabai -m space --mirror y-axis
 ctrl + cmd - i : yabai -m window --toggle zoom-fullscreen
 
 # balance out tree of windows (resize to occupy same area)
-ctrl + cmd - x : yabai -m space --balance
+ctrl + cmd - b : yabai -m space --balance
 
 # move window to space #
 ralt - q : yabai -m window --space 1;
