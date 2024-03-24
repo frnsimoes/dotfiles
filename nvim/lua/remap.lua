@@ -17,6 +17,10 @@ vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Navigate to the left window' })
 -- Resize vsplit window mapping
 vim.api.nvim_set_keymap('n', '<C-w>h', '<C-w><', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-w>l', '<C-w>>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<C-w>k', '<C-w>+', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<C-w>j', '<C-w>-', {noremap = true, silent = true})
+
+
 
 -- Highlight when yanking (copying) text
 --  See `:help vim.highlight.on_yank()`
