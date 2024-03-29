@@ -19,13 +19,12 @@ return {
 				":CopilotChat ",
 				desc = "CopilotChat - Input question",
 			},
-			{ "<leader>ccb", ":CopilotChatBuffer ", desc = "CopilotChat - Chat with current buffer" },
 			{ "<leader>cce", "<cmd>CopilotChatExplain<cr>", desc = "CopilotChat - Explain code" },
 			{ "<leader>cct", "<cmd>CopilotChatTests<cr>", desc = "CopilotChat - Generate tests" },
 			{
 				"<leader>ccT",
-				"<cmd>CopilotChatVsplitToggle<cr>",
-				desc = "CopilotChat - Toggle Vsplit", -- Toggle vertical split
+				"<cmd>CopilotChatToggle<cr>",
+				desc = "CopilotChat - Toggle",
 			},
 			{
 				"<leader>ccv",

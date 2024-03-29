@@ -1,5 +1,5 @@
 -- return {{
--- 	'frnsimoes/nvim-xenon',
+-- 	'minego/nvim-xenon',
 --
 -- 	-- Uncomment the following two lines when working with a local checkout
 -- 	-- dir = "~/src/nvim-xenon",
@@ -74,8 +74,8 @@ return {
 		Group.new("@function.bracket", g.Normal, g.Normal)
 		Group.new("@variable.builtin", c.purple:light():light(), g.Normal)
 
-		-- Group.new("VirtNonText", c.yellow:light():light(), nil, s.italic)
-		Group.new("VirtNonText", c.gray3:dark(), nil, s.italic)
+		Group.new("VirtNonText", c.yellow:light():light(), nil, s.italic)
+		-- Group.new("VirtNonText", c.gray3:dark(), nil, s.italic)
 
 		Group.new("TreesitterContext", nil, g.Normal.bg:light())
 		Group.new("TreesitterContextLineNumber", c.blue)

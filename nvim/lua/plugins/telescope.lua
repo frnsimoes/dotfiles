@@ -10,6 +10,11 @@ return {
 
 	config = function()
 		require('telescope').setup({
+			defaults = {
+				file_ignore_patterns = {
+					"__pycache__"
+				}
+			}
 			-- pickers = {
 			-- 	find_files = {
 			-- 		hidden = true,
