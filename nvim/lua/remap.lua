@@ -9,6 +9,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- Avoid netrw remap
 vim.api.nvim_set_keymap('n', '<leader>asdf', '<Plug>NetrwRefresh', {silent = true, nowait = true})
 
+-- Navigate between windows
 vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Navigate to the left window' })
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Navigate to the left window' })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Navigate to the left window' })
@@ -19,8 +20,6 @@ vim.api.nvim_set_keymap('n', '<C-w>h', '<C-w><', {noremap = true, silent = true}
 vim.api.nvim_set_keymap('n', '<C-w>l', '<C-w>>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-w>k', '<C-w>+', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-w>j', '<C-w>-', {noremap = true, silent = true})
-
-
 
 -- Highlight when yanking (copying) text
 --  See `:help vim.highlight.on_yank()`

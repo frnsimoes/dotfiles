@@ -98,17 +98,17 @@ return {
 		Group.new("Function", c.yellow, nil, s.none)
 
 		vim.cmd [[
-	hi link @function.call.lua LuaFunctionCall
-	hi link @lsp.type.variable.lua variable
-	hi link @lsp.type.variable.ocaml variable
-	hi link @lsp.type.variable.go variable
-	hi link @lsp.type.variable.rust variable
-	hi link @lsp.type.namespace @namespace
-	hi link @punctuation.bracket.rapper @text.literal
-	hi link @normal Normal
-	hi link @tag.attribute.html type
-	hi link @tag.delimiter.html @namespace
-	]]
+	 hi link @function.call.lua LuaFunctionCall
+	 hi link @lsp.type.variable.lua variable
+	 hi link @lsp.type.variable.ocaml variable
+	 hi link @lsp.type.variable.go variable
+	 hi link @lsp.type.variable.rust variable
+	 hi link @lsp.type.namespace @namespace
+	 hi link @punctuation.bracket.rapper @text.literal
+	 hi link @normal Normal
+	 hi link @tag.attribute.html type
+	 hi link @tag.delimiter.html @namespace
+	 ]]
 
 		Group.new("Normal", c.superwhite, c.gray0)
 
