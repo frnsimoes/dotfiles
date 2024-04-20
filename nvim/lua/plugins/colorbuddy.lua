@@ -1,4 +1,0 @@
-return {
-  "tjdevries/colorbuddy.nvim",
-}
-

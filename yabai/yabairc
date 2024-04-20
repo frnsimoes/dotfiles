@@ -19,4 +19,9 @@ yabai -m rule --add app="^Calculator$" manage=off
 yabai -m rule --add app="^Finder$" manage=off
 yabai -m rule --add app="^Mail$" manage=off
 yabai -m rule --add app="^Firefox$" manage=off
+yabai -m rule --add app="^Numbers$" manage=off
+yabai -m rule --add app="^Soulver 2$" manage=off
+yabai -m rule --add app="^Movist$" manage=off
+
+ctrl + alt - t : yabai -m window --toggle float --grid 4:4:1:1:2:2
 

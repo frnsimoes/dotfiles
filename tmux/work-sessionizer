@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected=$1
 else
-    selected=$(find -L ~/.config/dotfiles ~/code/experiment ~/code/test-anything ~/code/workspace -mindepth 1 -maxdepth 1 -type d | fzf)
+    selected=$(find -L ~/.config/dotfiles ~/code/experiment ~/code/test-anything ~/code/workspace/jorge ~/code/workspace/personal ~/code/workspace/personal ~/code/workspace/liber ~/code/workspace/liber/infrapay -mindepth 1 -maxdepth 1 -type d | fzf)
 fi
 
 if [[ -z $selected ]]; then
