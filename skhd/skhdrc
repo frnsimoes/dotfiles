@@ -36,5 +36,5 @@ resize < h : yabai -m window --resize right:-25:0
 resize < l : yabai -m window --resize right:25:0
 
 ctrl + cmd - f : yabai -m space --layout float
-ctrl + cmd - v : yabai -m space --layout bsp
+ctrl + cmd - g : yabai -m space --layout bsp
 
