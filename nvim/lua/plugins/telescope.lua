@@ -12,7 +12,8 @@ return {
 		require('telescope').setup({
 			defaults = {
 				file_ignore_patterns = {
-					"__pycache__"
+					"__pycache__",
+					"node_modules",
 				}
 			}
 			-- pickers = {
