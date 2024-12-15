@@ -2,5 +2,9 @@ tmux requirements:
 - brew install fzf
 
 nvim requirements:
-- brew install reattach-to-user-namespace (pbcopy)
+- brew install reattach-to-user-namespace 
+
+other requirements:
+
+- brew install blueutil
 
