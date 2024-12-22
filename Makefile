@@ -34,4 +34,11 @@ refresh-bluetooth:
 
 	blueutil --connect $(highnote)
 
+open:
+	open "/Applications/Alfred 5.app/"
+	open /Applications/Rectangle.app/
+	open /Applications/Adguard.app/
+
 clear-all: clear-caches clear-logs clear-torrent clear-docker
+
+

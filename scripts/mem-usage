@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Get the page size (16,384 bytes in your case)
+PAGE_SIZE=16384
+
+# Get the VM statistics
+vm_stats=$(vm_stat)
+
+# Extract the number of pages from vm_stat (removing the "pages" suffix and converting to an integer)
+pages_free=$(echo "$vm_stats" | grep "Pages free" | awk '{print $3}' | sed 's/\.//')
+pages_active=$(echo "$vm_stats" | grep "Pages active" | awk '{print $3}' | sed 's/\.//')
+pages_wired=$(echo "$vm_stats" | grep "Pages wired down" | awk '{print $4}' | sed 's/\.//')
+pages_purgeable=$(echo "$vm_stats" | grep "Pages purgeable" | awk '{print $3}' | sed 's/\.//')
+
+# Convert pages to MB (pages * page size in bytes / 1024 / 1024)
+bytes_to_mb=1048576
+free_memory=$(echo "$pages_free * $PAGE_SIZE / $bytes_to_mb" | bc)
+used_memory=$(echo "($pages_active + $pages_wired) * $PAGE_SIZE / $bytes_to_mb" | bc)
+purgeable_memory=$(echo "$pages_purgeable * $PAGE_SIZE / $bytes_to_mb" | bc)
+
+# Check for swap usage (in MB)
+swap_usage=$(sysctl vm.swapusage | awk '{print $2}')
+
+# Output results
+echo "Free Memory: ${free_memory} MB"
+echo "Used Memory: ${used_memory} MB"
+echo "Purgeable Memory: ${purgeable_memory} MB"
+echo "Swap Used: $swap_usage"
