@@ -2,9 +2,6 @@
 
 import things
 
-ts = things.tasks()
-
-for t in ts:
-    start_date = t.get('start_date')
-    print(f"{start_date} || {t['title']}")
+for t in things.tasks():
+    print(f"{t.get('start_date', '0000-00-00')} || {t['title']}")
 
