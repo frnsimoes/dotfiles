@@ -1,7 +1,3 @@
-cursor_vis() {
-  echo "\x1b[?25h"
-}
-
 s() {
   if [[ "$SHELL" =~ "zsh" ]]; then
     source $HOME/.zshrc
@@ -70,47 +66,6 @@ EOT
   esac
 }
 
-
-gitinfo() {
-  # Will not work unless setopt BASH_REMATCH.
-
-  local project_root=$(git rev-parse --show-toplevel 2> /dev/null)
-  
-  if [[ -z $project_root ]]; then
-    return
-  fi
-
-  local current_branch=$(git branch --show-current) 
-
-  git diff-index --quiet HEAD -- 2> /dev/null || uncommitted_changes=true
-
-  local styled_branch_name="::\e[1;38;5;220m$current_branch\e[0m"
-
-  if [[ ! $uncommitted_changes ]]; then 
-    printf $styled_branch_name 
-    return
-  fi
-
-  local stats=$(git diff --stat)
-
-  if [[ -z $stats ]]; then
-    printf $styled_branch_name
-    return
-  fi
-
-  [[ $stats =~ "[[:digit:]]+ insertion" ]] && insertions=${BASH_REMATCH[1]/ insertion/""}
-  [[ $stats =~ "[[:digit:]]+ deletion" ]] && deletions=${BASH_REMATCH[1]/ deletion/""}
-
-  if [[ ! -z $insertions && ! -z $deletions ]]; then
-    printf "$styled_branch_name::<\e[1;38;2;149;199;111m+\e[0m$insertions\e[36m|\e[0m\e[1;31m-\e[0m$deletions>"
-  elif [[ ! -z $insertions && -z $deletions ]]; then
-    printf "$styled_branch_name::<\e[1;38;2;149;199;111m+\e[0m$insertions>"
-  elif [[ -z $insertions && ! -z $deletions ]]; then
-    printf "$styled_branch_name::<\e[1;31m-\e[0m$deletions>"
-  else
-    printf "$styled_branch_name::<\e[1;38;2;149;199;111m\e[0m$insertions\e[36m|\e[0m\e[1;31m-\e[0m$deletions>"
-  fi
-}
 
 clean-docker() {
 	echo 'Removing containers'
