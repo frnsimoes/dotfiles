@@ -1,33 +1,39 @@
-clear-caches:
-	sudo rm -rf ~/Library/Caches/* 
-	sudo rm -rf /Library/Caches/*
+CONFIG_DIR = $(HOME)/.config
+DOTFILES_DIR = $(HOME)/dotfiles
+BREW_CMD = /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-clear-logs:
-	sudo rm -rf /private/var/log/*
-	sudo rm -rf ~/Library/Logs/*
+install-brew:
+	$(BREW_CMD)
 
-clear-torrent:
-	rm -rf torrent/*
+install-fzf:
+	brew install fzf
 
-set-dns:
-	echo "Choices are [cloudflare, google]"
-	read name; \
-	if [ "$$name" = "cloudflare" ]; then \
-		sudo networksetup -setdnsservers "Wi-Fi" 1.1.1.1 1.0.0.1; \
-	elif [ "$$name" = "google" ]; then \
-		sudo networksetup -setdnsservers "Wi-Fi" 8.8.8.8 8.8.4.4; \
-	else \
-		echo "Invalid choice. Please choose either [cloudflare] or [google]."; \
-		exit 1; \
-	fi; 
-	networksetup -getdnsservers "Wi-Fi"
-	sudo cat /etc/resolv.conf | grep -i "name*"
+install-namespace:
+	brew install reattach-to-user-namespace
 
-open:
-	open "/Applications/Alfred 5.app/"
-	open /Applications/Rectangle.app/
-	open /Applications/Adguard.app/
+install-blueutil:
+	brew install blueutil
+
+install-all: install-brew install-fzf install-namespace install-blueutil
+
+link-nvim:
+	mkdir -p $(CONFIG_DIR)/nvim
+	ln -sf $(DOTFILES_DIR)/nvim/* $(CONFIG_DIR)/nvim/
+
+link-tmux:
+	mkdir -p $(CONFIG_DIR)/tmux
+	ln -sf $(DOTFILES_DIR)/tmux/* $(CONFIG_DIR)/tmux/
+
+link-zsh:
+	mkdir -p $(CONFIG_DIR)/zsh
+	ln -sf $(DOTFILES_DIR)/zsh/* $(CONFIG_DIR)/zsh/
+
+link-zshrc:
+	ln -sf $(DOTFILES_DIR)/zsh/.zshrc $(HOME)/.zshrc
+
+# Group all tasks
+link-all: link-nvim link-tmux link-zsh link-zshrc
+
 
 ssh-tk:
-		ssh frns@192.168.1.222 
-
+	ssh frns@192.168.1.222 
