@@ -1,7 +1,0 @@
-#!/bin/bash
-
-cp ~/dotfiles/nvim ~/.config/nvim
-cp ~/dotfiles/tmux ~/.config/tmux
-ln -s ~/dotfiles/tmux ~/.config/tmux
-ln -s ~/dotfiles/nvim ~/.config/nvim
-

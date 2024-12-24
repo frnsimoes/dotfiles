@@ -9,12 +9,9 @@ clear-logs:
 clear-torrent:
 	rm -rf torrent/*
 
-clear-docker:
-	./.dotfiles/scripts/clean-docker
-
 set-dns:
-	@echo "Choices are [cloudflare, google]"
-	@read name; \
+	echo "Choices are [cloudflare, google]"
+	read name; \
 	if [ "$$name" = "cloudflare" ]; then \
 		sudo networksetup -setdnsservers "Wi-Fi" 1.1.1.1 1.0.0.1; \
 	elif [ "$$name" = "google" ]; then \
@@ -24,21 +21,13 @@ set-dns:
 		exit 1; \
 	fi; 
 	networksetup -getdnsservers "Wi-Fi"
-	@sudo cat /etc/resolv.conf | grep -i "name*"
-
-highnote = 4c-87-5d-81-ce-65
-refresh-bluetooth:
-	# requires blueutil: brew install blueutil
-	blueutil --power 0
-	blueutil --power 1
-
-	blueutil --connect $(highnote)
+	sudo cat /etc/resolv.conf | grep -i "name*"
 
 open:
 	open "/Applications/Alfred 5.app/"
 	open /Applications/Rectangle.app/
 	open /Applications/Adguard.app/
 
-clear-all: clear-caches clear-logs clear-torrent clear-docker
-
+ssh-tk:
+		ssh frns@192.168.1.222 
 
