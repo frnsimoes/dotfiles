@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     selected="$1"
 else
-   selected=$(find "$HOME/documents/notes/"  -maxdepth 2 -type f -name '*.md' | fzf)
+   selected=$(find "$HOME/me/notes/"  -maxdepth 2 -type f -name '*.md' | fzf)
 fi
 
 if [[ -z "$selected" ]]; then
