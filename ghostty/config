@@ -1,0 +1,11 @@
+
+# quick terminal
+keybind = global:command+space=toggle_quick_terminal
+quick-terminal-position = top
+quick-terminal-animation-duration = 0
+quick-terminal-screen = main
+
+# copy and write
+clipboard-write = allow
+keybind = global:command+c=copy_to_clipboard
+keybind = global:command+v=paste_from_clipboard
