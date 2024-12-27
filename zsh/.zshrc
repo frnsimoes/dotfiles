@@ -2,6 +2,8 @@ ZSH_THEME="robbyrussell"
 
 plugins=(git)
 
+export XDG_CONFIG_HOME="$HOME/.config"
+
 source /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 export PATH="$HOME/bin:$PATH"
@@ -15,4 +17,7 @@ source $ZSH/oh-my-zsh.sh
 source $DOTFILES/zsh/utils.zsh --source_only
 source $DOTFILES/zsh/init.zsh --source_only
 
+
+
 init
+
