@@ -17,15 +17,12 @@ install-blueutil:
 install-all: install-brew install-fzf install-namespace install-blueutil
 
 link-nvim:
-	mkdir -p $(CONFIG_DIR)/nvim
 	ln -sf $(DOTFILES_DIR)/nvim/* $(CONFIG_DIR)/nvim/
 
 link-tmux:
-	mkdir -p $(CONFIG_DIR)/tmux
 	ln -sf $(DOTFILES_DIR)/tmux/* $(CONFIG_DIR)/tmux/
 
 link-zsh:
-	mkdir -p $(CONFIG_DIR)/zsh
 	ln -sf $(DOTFILES_DIR)/zsh/* $(CONFIG_DIR)/zsh/
 
 link-zshrc:
