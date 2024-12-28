@@ -2,35 +2,19 @@ CONFIG_DIR = $(HOME)/.config
 DOTFILES_DIR = $(HOME)/dotfiles
 BREW_CMD = /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-install-brew:
+install:
 	$(BREW_CMD)
-
-install-fzf:
 	brew install fzf
-
-install-namespace:
 	brew install reattach-to-user-namespace
-
-install-blueutil:
 	brew install blueutil
 
-install-all: install-brew install-fzf install-namespace install-blueutil
-
-link-nvim:
-	ln -sf $(DOTFILES_DIR)/nvim/* $(CONFIG_DIR)/nvim/
-
-link-tmux:
-	ln -sf $(DOTFILES_DIR)/tmux/* $(CONFIG_DIR)/tmux/
-
-link-zsh:
-	ln -sf $(DOTFILES_DIR)/zsh/* $(CONFIG_DIR)/zsh/
-
-link-zshrc:
-	ln -sf $(DOTFILES_DIR)/zsh/.zshrc $(HOME)/.zshrc
-
-# Group all tasks
-link-all: link-nvim link-tmux link-zsh link-zshrc
+link:
+	@[ ! -e $(CONFIG_DIR)/nvim ] && ln -s $(DOTFILES_DIR)/nvim $(CONFIG_DIR)/nvim || echo "$(CONFIG_DIR)/nvim already exists"
+	@[ ! -e $(CONFIG_DIR)/tmux ] && ln -s $(DOTFILES_DIR)/tmux $(CONFIG_DIR)/tmux || echo "$(CONFIG_DIR)/tmux already exists"
+	@[ ! -e $(CONFIG_DIR)/zsh ] && ln -s $(DOTFILES_DIR)/zsh $(CONFIG_DIR)/zsh || echo "$(CONFIG_DIR)/zsh already exists"
+	@[ ! -e $(HOME)/.zshrc ] && ln -s $(DOTFILES_DIR)/zsh/.zshrc $(HOME)/.zshrc || echo "$(HOME)/.zshrc already exists"
+	@[ ! -e $(CONFIG_DIR)/ghostty ] && ln -s $(DOTFILES_DIR)/ghostty $(CONFIG_DIR)/ghostty || echo "$(CONFIG_DIR)/ghostty already exists"
 
 
-ssh-tk:
-	ssh frns@192.168.1.222 
+fresh-start:
+	install link
