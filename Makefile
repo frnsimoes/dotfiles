@@ -1,20 +1,28 @@
 CONFIG_DIR = $(HOME)/.config
 DOTFILES_DIR = $(HOME)/dotfiles
-BREW_CMD = /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+BREW_CMD = /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+install-dependencies:
+	@which brew >/dev/null 2>&1 || $(BREW_CMD)  # Install Homebrew only if not installed
+	@brew install fzf
+	@brew install reattach-to-user-namespace
+	@brew install blueutil
 
 install:
-	$(BREW_CMD)
-	brew install fzf
-	brew install reattach-to-user-namespace
-	brew install blueutil
+	@brew install neovim
+	@brew install tmux
+	@brew install ghostty
+	@brew install rectangle
 
 link:
-	@[ ! -e $(CONFIG_DIR)/nvim ] && ln -s $(DOTFILES_DIR)/nvim $(CONFIG_DIR)/nvim || echo "$(CONFIG_DIR)/nvim already exists"
-	@[ ! -e $(CONFIG_DIR)/tmux ] && ln -s $(DOTFILES_DIR)/tmux $(CONFIG_DIR)/tmux || echo "$(CONFIG_DIR)/tmux already exists"
-	@[ ! -e $(CONFIG_DIR)/zsh ] && ln -s $(DOTFILES_DIR)/zsh $(CONFIG_DIR)/zsh || echo "$(CONFIG_DIR)/zsh already exists"
-	@[ ! -e $(HOME)/.zshrc ] && ln -s $(DOTFILES_DIR)/zsh/.zshrc $(HOME)/.zshrc || echo "$(HOME)/.zshrc already exists"
-	@[ ! -e $(CONFIG_DIR)/ghostty ] && ln -s $(DOTFILES_DIR)/ghostty $(CONFIG_DIR)/ghostty || echo "$(CONFIG_DIR)/ghostty already exists"
+	@for name in nvim tmux zsh ghostty; do \
+		src="$(DOTFILES_DIR)/$$name"; \
+		dst="$(CONFIG_DIR)/$$name"; \
+		[ ! -e $$dst ] && ln -s $$src $$dst || echo "$$dst already exists"; \
+	done
 
+	@src="$(DOTFILES_DIR)/zsh/.zshrc"; dst="$(HOME)/.zshrc"; \
+	[ ! -e $$dst ] && ln -s $$src $$dst || echo "$$dst already exists"
 
-fresh-start:
-	install link
+all: install-dependencies install link
