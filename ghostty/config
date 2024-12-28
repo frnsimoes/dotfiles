@@ -1,3 +1,10 @@
+#settings
+auto-update = check
+quit-after-last-window-closed = false
+window-decoration = false
+
+# ssh twiks
+# shell-integration-features = sudo
 
 # quick terminal
 keybind = global:command+space=toggle_quick_terminal
@@ -7,5 +14,6 @@ quick-terminal-screen = main
 
 # copy and write
 clipboard-write = allow
-keybind = global:command+c=copy_to_clipboard
-keybind = global:command+v=paste_from_clipboard
+keybind = command+c=copy_to_clipboard
+keybind = command+v=paste_from_clipboard
+
