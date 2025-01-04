@@ -93,3 +93,5 @@ rb() {
     echo "Connecting to device with MAC address $highnote..."
     blueutil --connect "$highnote"
 }
+
+alias curdate='date +%d-%m-%Y'
