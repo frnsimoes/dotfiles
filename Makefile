@@ -14,9 +14,10 @@ install:
 	@brew install tmux
 	@brew install ghostty
 	@brew install rectangle
+	@brew install helix
 
 link:
-	@for name in nvim tmux zsh ghostty; do \
+	@for name in nvim tmux zsh ghostty helix; do \
 		src="$(DOTFILES_DIR)/$$name"; \
 		dst="$(CONFIG_DIR)/$$name"; \
 		[ ! -e $$dst ] && ln -s $$src $$dst || echo "$$dst already exists"; \
