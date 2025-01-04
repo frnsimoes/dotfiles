@@ -1,0 +1,14 @@
+theme = "carbonfox"
+
+[editor]
+
+[editor.file-picker]
+hidden = false
+
+[editor.soft-wrap]
+enable = true
+wrap-indicator = ""
+
+[keys.normal]
+V = ["select_mode", "extend_to_line_bounds"]
+L = ["repeat_last_motion"]
