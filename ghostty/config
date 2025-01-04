@@ -1,10 +1,12 @@
+keybind = clear
 #settings
 auto-update = check
 quit-after-last-window-closed = false
 window-decoration = false
+macos-option-as-alt = true
 
 # ssh twiks
-# shell-integration-features = sudo
+shell-integration-features = sudo
 
 # quick terminal
 keybind = global:command+space=toggle_quick_terminal
