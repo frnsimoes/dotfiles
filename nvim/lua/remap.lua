@@ -31,3 +31,4 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	end,
 })
 
+vim.keymap.set('n', ':curdate', '"=strftime("%d-%m-%Y")<CR>P')
