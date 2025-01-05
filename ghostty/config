@@ -1,4 +1,3 @@
-keybind = clear
 #settings
 auto-update = check
 quit-after-last-window-closed = false
@@ -15,7 +14,8 @@ quick-terminal-animation-duration = 0
 quick-terminal-screen = main
 
 # copy and write
+clipboard-read = allow
 clipboard-write = allow
-keybind = command+c=copy_to_clipboard
-keybind = command+v=paste_from_clipboard
+# keybind = command+c=copy_to_clipboard
+# keybind = command+v=paste_from_clipboard
 
