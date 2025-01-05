@@ -1,6 +1,8 @@
 theme = "modus_vivendi_deuteranopia"
 
 [editor]
+mouse = false
+clipboard-provider = "pasteboard"
 
 [editor.file-picker]
 hidden = false
