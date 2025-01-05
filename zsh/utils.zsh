@@ -95,3 +95,7 @@ rb() {
 }
 
 alias curdate='date +%d-%m-%Y'
+
+hello_to_hi() {
+    sed 's/hello/hi/g'
+}
