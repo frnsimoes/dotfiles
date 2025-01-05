@@ -1,4 +1,4 @@
-theme = "carbonfox"
+theme = "modus_vivendi_deuteranopia"
 
 [editor]
 
@@ -10,5 +10,6 @@ enable = true
 wrap-indicator = ""
 
 [keys.normal]
+esc = ["collapse_selection", "keep_primary_selection"]
 V = ["select_mode", "extend_to_line_bounds"]
 L = ["repeat_last_motion"]
