@@ -2,6 +2,10 @@ ZSH_THEME="robbyrussell"
 
 plugins=(git)
 
+export LANG=en_US
+export LANGUAGE=en
+export LC_MESSAGES=C
+
 export XDG_CONFIG_HOME="$HOME/.config"
 
 source /opt/homebrew/opt/asdf/libexec/asdf.sh
@@ -15,5 +19,4 @@ export ZSH="$HOME/.oh-my-zsh"
 
 source $ZSH/oh-my-zsh.sh
 source $DOTFILES/zsh/utils.zsh --source_only
-
 
