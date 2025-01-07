@@ -22,7 +22,6 @@ y = ["yank_main_selection_to_clipboard", "normal_mode", "flip_selections", "coll
 
 D = ["extend_to_line_end", "delete_selection", "normal_mode"]
 
-
 "space" = { t = ":sh tmux display-popup -E \"yazi\"" }
 
 [keys.select]

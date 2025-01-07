@@ -2,6 +2,10 @@ ZSH_THEME="robbyrussell"
 
 plugins=(git)
 
+export LANG=en_US
+export LANGUAGE=en
+export LC_MESSAGES=C
+
 export XDG_CONFIG_HOME="$HOME/.config"
 export EDITOR=hx
 
@@ -18,4 +22,3 @@ source $ZSH/oh-my-zsh.sh
 source $DOTFILES/zsh/utils.zsh --source_only
 
 . "$HOME/.local/bin/env"
-
