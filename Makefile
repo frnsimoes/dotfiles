@@ -20,17 +20,19 @@ brew-dependencies:
 	@brew install yazi
 	@brew install uv
 
-	
+
 link:
 	@for name in nvim tmux zsh ghostty helix; do \
 		src="$(DOTFILES_DIR)/$$name"; \
 		dst="$(CONFIG_DIR)/$$name"; \
 		[ ! -e $$dst ] && ln -s $$src $$dst || echo "$$dst already exists"; \
 	done
-
-	@src="$(DOTFILES_DIR)/zsh/.zshrc"; dst="$(HOME)/.zshrc"; \
-	[ ! -e $$dst ] && ln -s $$src $$dst || echo "$$dst already exists"
-
+	@for name in git/.gitconfig zsh/.zshrc; do \
+		base=$${name##*/}; \
+		src="$(DOTFILES_DIR)/$$name"; \
+		dst="$(HOME)/$$base"; \
+		[ ! -e $$dst ] && ln -s $$src $$dst || echo "$$dst already exists"; \
+	done
 
 python-dependencies:
 	@uv python install
