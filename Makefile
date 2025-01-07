@@ -3,13 +3,12 @@ DOTFILES_DIR = $(HOME)/dotfiles
 
 BREW_CMD = /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-
-
 system-dependencies:
 	@which brew >/dev/null 2>&1 || $(BREW_CMD)  # Install Homebrew only if not installed
 	@brew install fzf
 	@brew install reattach-to-user-namespace
 	@brew install blueutil
+
 
 brew-dependencies:
 	@brew install neovim
@@ -19,6 +18,7 @@ brew-dependencies:
 	@brew install helix
 	@brew install yazi
 	@brew install uv
+	@brew install git-delta
 
 
 link:
@@ -27,6 +27,7 @@ link:
 		dst="$(CONFIG_DIR)/$$name"; \
 		[ ! -e $$dst ] && ln -s $$src $$dst || echo "$$dst already exists"; \
 	done
+
 	@for name in git/.gitconfig zsh/.zshrc; do \
 		base=$${name##*/}; \
 		src="$(DOTFILES_DIR)/$$name"; \
