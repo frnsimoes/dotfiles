@@ -1,0 +1,30 @@
+# This is Git's per-user configuration file.
+[user]
+	name = frnsimoes
+	email = simoes.grcia@gmail.com
+# Please adapt and uncomment the following lines:
+#	name = Fernando Simoes
+#	email = simoes.grcia@gmail.com
+
+[core]
+	editor = hx
+	autocrlf = input
+	safecrlf = true
+	pager = delta
+
+[alias]
+	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+	type = cat-file -t
+	dump = cat-file -p
+
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    dark = true      # or light = true, or omit for auto-detection
+	side-by-side = true
+
+[merge]
+    conflictstyle = zdiff3
