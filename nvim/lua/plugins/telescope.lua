@@ -27,7 +27,6 @@ return {
 		-- vim.keymap.set('n', '<leader>pf', builtin.find_files, {})
 		-- vim.keymap.set('n', '<C-p>', builtin.git_files, {})
 
-		vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
 		vim.keymap.set('n', '<C-p>', builtin.find_files, {})
 		vim.keymap.set('n', '<leader>pws', function()
 			local word = vim.fn.expand("<cword>")
@@ -43,8 +42,7 @@ return {
 		vim.keymap.set('n', '<leader>wo', function()
 			builtin.grep_string({ search = vim.fn.input("Grep > ") })
 		end)
-		vim.keymap.set ('n', '<leader>fg' , builtin.live_grep, { desc = '[F]ind [G]rep' })
-
+		vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind [G]rep' })
 		vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
 		vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
 		vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -68,7 +66,5 @@ return {
 		vim.keymap.set('n', '<leader>sn', function()
 			builtin.find_files { cwd = vim.fn.stdpath 'config' }
 		end, { desc = '[S]earch [N]eovim files' })
-
-
 	end
 }

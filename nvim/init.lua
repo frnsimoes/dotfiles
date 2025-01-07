@@ -27,3 +27,5 @@ require('remap')
 require("CopilotChat").setup {
 	debug = true,
 }
+
+require('config.env')
