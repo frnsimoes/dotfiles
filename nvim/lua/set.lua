@@ -39,3 +39,7 @@ vim.opt.hlsearch = true
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
+
+
+vim.opt.cmdheight = 1             -- Ensure command line has height
+vim.opt.wildoptions:remove("pum") -- Remove popup menu from wild menu

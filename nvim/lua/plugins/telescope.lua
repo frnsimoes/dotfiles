@@ -4,7 +4,7 @@ return {
 	BeginTransactiontag = "0.1.5",
 
 	dependencies = {
-		"folke/which-key.nvim",
+		-- "folke/which-key.nvim",
 		"nvim-lua/plenary.nvim",
 	},
 

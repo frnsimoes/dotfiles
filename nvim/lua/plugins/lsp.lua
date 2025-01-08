@@ -3,14 +3,25 @@ return {
 	dependencies = {
 		'williamboman/mason.nvim',
 		'williamboman/mason-lspconfig.nvim',
-		'hrsh7th/nvim-cmp', -- Autocompletion plugin
-		'hrsh7th/cmp-nvim-lsp', -- LSP source for nvim-cmp
-		'hrsh7th/cmp-buffer', -- Buffer completions
-		'hrsh7th/cmp-path', -- Path completions
+		'hrsh7th/nvim-cmp',
+		'hrsh7th/cmp-nvim-lsp',
+		'hrsh7th/cmp-buffer',
+		'hrsh7th/cmp-path',
+		'L3MON4D3/LuaSnip',
+		'saadparwaiz1/cmp_luasnip',
+		'ray-x/lsp_signature.nvim',
 	},
 	config = function()
 		-- Enhanced capabilities for autocompletion
 		local capabilities = require('cmp_nvim_lsp').default_capabilities()
+		capabilities.textDocument.completion.completionItem.snippetSupport = true
+		capabilities.textDocument.completion.completionItem.resolveSupport = {
+			properties = {
+				'documentation',
+				'detail',
+				'additionalTextEdits',
+			}
+		}
 
 		-- Basic LSP keymaps
 		local on_attach = function(client, bufnr)
@@ -18,13 +29,23 @@ return {
 				vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
 			end
 
+			-- Setup signature help
+			require('lsp_signature').on_attach({
+				bind = true,
+				handler_opts = {
+					border = "rounded"
+				},
+				hint_enable = false,
+				floating_window = true,
+				toggle_key = '<C-k>',
+			}, bufnr)
+
 			map('gd', vim.lsp.buf.definition, 'Goto Definition')
 			map('K', vim.lsp.buf.hover, 'Hover Documentation')
 			map('rf', '<cmd>Telescope lsp_references<cr>', 'Show References')
 			map('<leader>rn', vim.lsp.buf.rename, 'Rename')
 			map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
 
-			-- Should I keep this?
 			if client.server_capabilities.documentFormattingProvider then
 				vim.api.nvim_create_autocmd("BufWritePre", {
 					buffer = bufnr,
@@ -55,19 +76,37 @@ return {
 			automatic_installation = true,
 		})
 
-		-- Setup nvim-cmp
+		-- Setup nvim-cmp with snippets support
 		local cmp = require('cmp')
+		local luasnip = require('luasnip')
+
 		cmp.setup({
+			snippet = {
+				expand = function(args)
+					luasnip.lsp_expand(args.body)
+				end,
+			},
 			mapping = cmp.mapping.preset.insert({
 				['<C-Space>'] = cmp.mapping.complete(),
 				['<CR>'] = cmp.mapping.confirm({ select = true }),
 				['<Tab>'] = cmp.mapping.select_next_item(),
 				['<S-Tab>'] = cmp.mapping.select_prev_item(),
 			}),
-			sources = {
-				{ name = 'nvim_lsp' },
+			sources = cmp.config.sources({
+				{
+					name = 'nvim_lsp',
+					entry_filter = function(entry, ctx)
+						local kind = require('cmp.types.lsp').CompletionItemKind
+						[entry:get_kind()]
+						return kind ~= 'Text'
+					end
+				},
+				{ name = 'luasnip' },
 				{ name = 'buffer' },
 				{ name = 'path' },
+			}),
+			completion = {
+				completeopt = 'menu,menuone,noinsert',
 			},
 		})
 
@@ -83,6 +122,8 @@ return {
 							autoSearchPaths = true,
 							useLibraryCodeForTypes = true,
 							diagnosticMode = "openFilesOnly",
+							autoImports = true,
+							importFormat = "absolute",
 						},
 					},
 				},
