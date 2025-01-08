@@ -7,7 +7,7 @@
 #	email = simoes.grcia@gmail.com
 
 [core]
-	editor = hx
+	editor = nvim
 	autocrlf = input
 	safecrlf = true
 	pager = delta
