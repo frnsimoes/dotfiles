@@ -15,12 +15,12 @@ return {
 					"__pycache__",
 					"node_modules",
 				}
-			}
-			-- pickers = {
-			-- 	find_files = {
-			-- 		hidden = true,
-			-- 	},
-			-- },
+			},
+			pickers = {
+				find_files = {
+					hidden = true,
+				}
+			},
 		})
 
 		local builtin = require('telescope.builtin')

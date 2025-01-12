@@ -43,3 +43,18 @@ vim.opt.inccommand = 'split'
 
 vim.opt.cmdheight = 1             -- Ensure command line has height
 vim.opt.wildoptions:remove("pum") -- Remove popup menu from wild menu
+
+-- accent colorscheme config 
+vim.g.accent_colour = 'blue'
+vim.g.accent_darken = 1
+
+-- Enable autoread
+vim.o.autoread = true
+
+-- Trigger `checktime` when switching buffers or focusing Neovim
+vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "CursorHold", "CursorHoldI" }, {
+    command = "if mode() != 'c' | checktime | endif",
+    pattern = "*",
+})
+-- Reload Neovim configuration
+vim.keymap.set('n', '<leader>r', ':source ~/.config/nvim/init.lua<CR>', { desc = 'Reload Neovim config' })
