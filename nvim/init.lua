@@ -24,8 +24,6 @@ lazy.setup("plugins")
 -- Load remaps before loading plugins
 require('remap')
 
-require("CopilotChat").setup {
-	debug = true,
-}
-
-require('config.env')
+-- require("CopilotChat").setup {
+-- 	debug = true,
+-- }

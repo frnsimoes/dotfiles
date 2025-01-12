@@ -3,26 +3,10 @@ return {
 	dependencies = {
 		'williamboman/mason.nvim',
 		'williamboman/mason-lspconfig.nvim',
-		'hrsh7th/nvim-cmp',
-		'hrsh7th/cmp-nvim-lsp',
-		'hrsh7th/cmp-buffer',
-		'hrsh7th/cmp-path',
-		'L3MON4D3/LuaSnip',
-		'saadparwaiz1/cmp_luasnip',
 		'ray-x/lsp_signature.nvim',
 	},
 	config = function()
-		-- Enhanced capabilities for autocompletion
-		local capabilities = require('cmp_nvim_lsp').default_capabilities()
-		capabilities.textDocument.completion.completionItem.snippetSupport = true
-		capabilities.textDocument.completion.completionItem.resolveSupport = {
-			properties = {
-				'documentation',
-				'detail',
-				'additionalTextEdits',
-			}
-		}
-
+		local capabilities = require('blink.cmp').get_lsp_capabilities()
 		-- Basic LSP keymaps
 		local on_attach = function(client, bufnr)
 			local map = function(keys, func, desc)
@@ -76,40 +60,6 @@ return {
 			automatic_installation = true,
 		})
 
-		-- Setup nvim-cmp with snippets support
-		local cmp = require('cmp')
-		local luasnip = require('luasnip')
-
-		cmp.setup({
-			snippet = {
-				expand = function(args)
-					luasnip.lsp_expand(args.body)
-				end,
-			},
-			mapping = cmp.mapping.preset.insert({
-				['<C-Space>'] = cmp.mapping.complete(),
-				['<CR>'] = cmp.mapping.confirm({ select = true }),
-				['<Tab>'] = cmp.mapping.select_next_item(),
-				['<S-Tab>'] = cmp.mapping.select_prev_item(),
-			}),
-			sources = cmp.config.sources({
-				{
-					name = 'nvim_lsp',
-					entry_filter = function(entry, ctx)
-						local kind = require('cmp.types.lsp').CompletionItemKind
-						[entry:get_kind()]
-						return kind ~= 'Text'
-					end
-				},
-				{ name = 'luasnip' },
-				{ name = 'buffer' },
-				{ name = 'path' },
-			}),
-			completion = {
-				completeopt = 'menu,menuone,noinsert',
-			},
-		})
-
 		-- Configure LSP servers
 		local lspconfig = require('lspconfig')
 		local servers = {
@@ -124,6 +74,7 @@ return {
 							diagnosticMode = "openFilesOnly",
 							autoImports = true,
 							importFormat = "absolute",
+							autoImportCompletions = true,
 						},
 					},
 				},
@@ -137,6 +88,7 @@ return {
 					},
 				},
 			},
+			terraform = {},
 		}
 
 		-- Setup servers
