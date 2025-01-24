@@ -58,5 +58,5 @@ vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "CursorHold", "CursorHo
 	command = "if mode() != 'c' | checktime | endif",
 	pattern = "*",
 })
--- Reload Neovim configuration
-vim.keymap.set('n', '<leader>r', ':source ~/.config/nvim/init.lua<CR>', { desc = 'Reload Neovim config' })
+
+vim.keymap.set('c', '<Tab>', '<C-z>')
