@@ -16,6 +16,7 @@
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
 	type = cat-file -t
 	dump = cat-file -p
+	line-history = "!f() { git log -L $1,$1:$2; }; f" # git log -L 2,2:pyproject, for example. To blame: git blame -L 2,2 pyproject (without `:`).
 
 
 [interactive]
