@@ -88,7 +88,6 @@ return {
 					},
 				},
 			},
-			terraform = {},
 		}
 
 		-- Setup servers
