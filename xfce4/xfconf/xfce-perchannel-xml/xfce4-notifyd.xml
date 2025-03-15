@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<channel name="xfce4-notifyd" version="1.0">
+  <property name="applications" type="empty">
+    <property name="known_applications" type="array">
+      <value type="string" value="blueman"/>
+      <value type="string" value="calibre"/>
+      <value type="string" value="com.discordapp.Discord"/>
+      <value type="string" value="com.spotify.Client"/>
+      <value type="string" value="Firefox"/>
+      <value type="string" value="google-chrome"/>
+      <value type="string" value="Local System Message Service"/>
+      <value type="string" value="Mullvad VPN"/>
+      <value type="string" value="Network Management"/>
+      <value type="string" value="notify-send"/>
+      <value type="string" value="org.freedesktop.network-manager-applet"/>
+      <value type="string" value="org.kde.discover.notifier"/>
+      <value type="string" value="org.kde.org_kde_powerdevil"/>
+      <value type="string" value="org.kde.plasmashell"/>
+      <value type="string" value="org.mozilla.Thunderbird"/>
+      <value type="string" value="org.qbittorrent.qBittorrent"/>
+      <value type="string" value="org.xfce.Thunar"/>
+      <value type="string" value="wezterm"/>
+      <value type="string" value="Xfce volume control"/>
+      <value type="string" value="xfce4-power-manager"/>
+      <value type="string" value="xfce4-settings-helper"/>
+    </property>
+    <property name="muted_applications" type="array">
+      <value type="string" value="com.discordapp.Discord"/>
+    </property>
+  </property>
+  <property name="do-not-disturb" type="bool" value="false"/>
+  <property name="primary-monitor" type="uint" value="0"/>
+  <property name="notify-location" type="uint" value="2"/>
+  <property name="log-level" type="uint" value="0"/>
+  <property name="log-level-apps" type="uint" value="0"/>
+</channel>
