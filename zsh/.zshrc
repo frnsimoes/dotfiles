@@ -8,9 +8,7 @@ export LC_ALL=en_US.UTF-8
 export LC_MESSAGES=en_US.UTF-8
 
 export XDG_CONFIG_HOME="$HOME/.config"
-export EDITOR=hx
-
-source /opt/homebrew/opt/asdf/libexec/asdf.sh
+export EDITOR=nvim
 
 export PATH="$HOME/dotfiles/bin:$PATH"
 export MYVIMRC="$HOME/.config/init.lua"
@@ -21,5 +19,11 @@ export ZSH="$HOME/.oh-my-zsh"
 
 source $ZSH/oh-my-zsh.sh
 source $DOTFILES/zsh/utils.zsh --source_only
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-. "$HOME/.local/bin/env"
+
+# Cursor thing
+export XDG_DATA_DIRS=/usr/share:/usr/local/share
+function cursor {
+    (nohup /opt/cursor.appimage "$@" > /dev/null 2>&1 &)
+}
