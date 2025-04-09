@@ -27,3 +27,22 @@ export XDG_DATA_DIRS=/usr/share:/usr/local/share
 function cursor {
     (nohup /opt/cursor.appimage "$@" > /dev/null 2>&1 &)
 }
+source $HOME/.local/bin
+
+. $HOME/.asdf/plugins/golang/set-env.zsh
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+fzfp() {
+    local dir
+    dir=$(find $HOME/personal_files  -type d | fzf)
+    if [[ -n "$dir" ]]; then
+        cd "$dir"
+    fi
+}
+fzfc() {
+    local dir
+    dir=$(find $HOME/code -type d | fzf)
+    if [[ -n "$dir" ]]; then
+        cd "$dir"
+    fi
+}

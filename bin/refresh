@@ -1,0 +1,63 @@
+#!/bin/bash
+
+BOSE_MAC="4C:87:5D:81:CE:65"
+MOUSE_MAC="E3:CD:E9:21:88:17"    
+
+refresh_device() {
+    local device_mac=$1
+    local device_name=$2
+    
+    echo "Refreshing connection for $device_name ($device_mac)..."
+    
+    echo "Disconnecting $device_name..."
+    bluetoothctl disconnect $device_mac
+    sleep 2
+    
+    echo "Connecting $device_name..."
+    bluetoothctl connect $device_mac
+    
+    if bluetoothctl info $device_mac | grep -q "Connected: yes"; then
+        echo "$device_name connected successfully."
+    else
+        echo "Warning: $device_name may not have connected properly."
+    fi
+    
+    echo "------------------------"
+}
+
+show_usage() {
+    echo "Usage: $0 [device_nickname]"
+    echo "Available device nicknames:"
+    echo "  mouse - Refresh mouse connection"
+    echo "  bose  - Refresh Bose headphones connection"
+    echo "  all   - Refresh all devices"
+    echo "Example: $0 mouse"
+    exit 1
+}
+
+echo "Starting Bluetooth refresh script..."
+
+if [ $# -eq 0 ]; then
+    show_usage
+fi
+
+for arg in "$@"; do
+    case $arg in
+        mouse)
+            refresh_device "$MOUSE_MAC" "Mouse"
+            ;;
+        bose)
+            refresh_device "$BOSE_MAC" "Bose headphones"
+            ;;
+        all)
+            refresh_device "$MOUSE_MAC" "Mouse"
+            refresh_device "$BOSE_MAC" "Bose headphones"
+            ;;
+        *)
+            echo "Unknown device: $arg"
+            show_usage
+            ;;
+    esac
+done
+
+echo "Bluetooth refresh completed."
