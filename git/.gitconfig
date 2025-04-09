@@ -1,10 +1,7 @@
 # This is Git's per-user configuration file.
 [user]
 	name = frnsimoes
-	email = simoes.grcia@gmail.com
-# Please adapt and uncomment the following lines:
-#	name = Fernando Simoes
-#	email = simoes.grcia@gmail.com
+	email = 
 
 [core]
 	editor = nvim
