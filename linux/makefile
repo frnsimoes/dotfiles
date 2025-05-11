@@ -51,13 +51,3 @@ end-work:
 	
 	ip link show | grep "fernando_simoes" || echo "Interface fernando_simoes is down"
 
-building:
-	cd /home/frns/documents/boring_stuff/building
-
-people:
-	cd /home/frns/documents/personal/people
-
-joaquim:
-	cd /home/frns/documents/personal/people
-
-

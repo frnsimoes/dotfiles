@@ -1,1 +1,0 @@
-cd "$(find $HOME/personal_files -type d | fzf)"
