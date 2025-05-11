@@ -32,17 +32,11 @@ source $HOME/.local/bin
 . $HOME/.asdf/plugins/golang/set-env.zsh
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
-fzfp() {
-    local dir
-    dir=$(find $HOME/personal_files  -type d | fzf)
-    if [[ -n "$dir" ]]; then
-        cd "$dir"
-    fi
+function gt() {
+  local dir
+  dir=$(find $HOME/personal -type d | fzf) && cd "$dir"
 }
-fzfc() {
-    local dir
-    dir=$(find $HOME/code -type d | fzf)
-    if [[ -n "$dir" ]]; then
-        cd "$dir"
-    fi
-}
+
+
+CFLAGS='-Wall -Werror -Wextra'
+alias cc='cc ${CFLAGS}'
