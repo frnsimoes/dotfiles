@@ -57,7 +57,7 @@ return {
 		require('mason').setup()
 		require('mason-lspconfig').setup({
 			ensure_installed = { 'gopls', 'pyright', 'lua_ls' },
-			automatic_installation = true,
+			automatic_enable = false,
 		})
 
 		-- Configure LSP servers
