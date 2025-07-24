@@ -21,4 +21,5 @@ export DOTFILES="$HOME/dotfiles"
 export ZSH="$HOME/.oh-my-zsh"
 
 source $ZSH/oh-my-zsh.sh
-source $DOTFILES/zsh/utils.zsh --source_only
+
+
