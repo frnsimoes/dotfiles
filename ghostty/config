@@ -18,4 +18,9 @@ clipboard-read = allow
 clipboard-write = allow
 # keybind = command+c=copy_to_clipboard
 # keybind = command+v=paste_from_clipboard
+#
+
+theme=Banana Blueberry
+
+
 
