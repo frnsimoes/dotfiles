@@ -22,8 +22,23 @@ export ZSH="$HOME/.oh-my-zsh"
 
 source $ZSH/oh-my-zsh.sh
 
+# zoxide
+autoload -Uz compinit
+compinit
+eval "$(zoxide init zsh)"
+
 # asdf
 source /opt/homebrew/opt/asdf/libexec/asdf.sh
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 . ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/golang/set-env.zsh
 
+
+gt() {
+    selected_dir=$(find . -type d -not -path '*/.*' 2>/dev/null | fzf --height=40% --border --preview 'ls -la {}')
+    if [ -n "$selected_dir" ]; then
+        cd "$selected_dir"
+        echo "Moved to: $selected_dir"
+    else
+        echo "No directory selected"
+    fi
+}
