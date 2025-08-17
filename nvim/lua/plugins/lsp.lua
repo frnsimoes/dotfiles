@@ -56,7 +56,7 @@ return {
 		-- Setup Mason
 		require('mason').setup()
 		require('mason-lspconfig').setup({
-			ensure_installed = { 'gopls', 'pyright', 'lua_ls' },
+			ensure_installed = { 'gopls', 'pyright', 'lua_ls', 'yamlls' },
 			automatic_enable = false,
 		})
 
@@ -85,6 +85,19 @@ return {
 						diagnostics = {
 							globals = { 'vim' },
 						},
+					},
+				},
+			},
+			yamlls = {
+				settings = {
+					yaml = {
+						schemas = {
+							["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
+							["https://json.schemastore.org/github-action.json"] = "/.github/action.{yml,yaml}",
+						},
+						validate = true,
+						completion = true,
+						hover = true,
 					},
 				},
 			},

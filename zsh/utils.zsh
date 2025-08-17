@@ -1,3 +1,5 @@
+alias curdate='date +%d-%m-%Y'
+
 clean-docker() {
 	echo 'Removing containers'
 	for container in $(docker ps -a | awk '{print $1}'); do
@@ -25,5 +27,14 @@ rb() {
     blueutil --connect "$highnote"
 }
 
-alias curdate='date +%d-%m-%Y'
 
+
+gt() {
+    selected_dir=$(find . -type d -not -path '*/.*' 2>/dev/null | fzf --height=40% --border --preview 'ls -la {}')
+    if [ -n "$selected_dir" ]; then
+        cd "$selected_dir"
+        echo "Moved to: $selected_dir"
+    else
+        echo "No directory selected"
+    fi
+}

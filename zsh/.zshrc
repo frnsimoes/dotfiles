@@ -8,7 +8,7 @@ export LC_ALL=en_US.UTF-8
 export LC_MESSAGES=en_US.UTF-8
 
 export XDG_CONFIG_HOME="$HOME/.config"
-export EDITOR=hx
+export EDITOR=nvim
 
 
 export PATH="$HOME/dotfiles/bin:$PATH"
@@ -33,12 +33,13 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 . ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/golang/set-env.zsh
 
 
-gt() {
-    selected_dir=$(find . -type d -not -path '*/.*' 2>/dev/null | fzf --height=40% --border --preview 'ls -la {}')
-    if [ -n "$selected_dir" ]; then
-        cd "$selected_dir"
-        echo "Moved to: $selected_dir"
-    else
-        echo "No directory selected"
-    fi
-}
+
+for file in ~/dotfiles/zsh/*.zsh; do
+  source "$file"
+done
+
+for file in ~/work/terragrunt-infrastructure/scripts/*.sh; do
+    source "$file"
+done
+
+# 192.168.64.3 - ubuntu VM
