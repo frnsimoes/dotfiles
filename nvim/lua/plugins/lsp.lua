@@ -1,113 +1,31 @@
 return {
-	'neovim/nvim-lspconfig',
-	dependencies = {
-		'williamboman/mason.nvim',
-		'williamboman/mason-lspconfig.nvim',
-		'ray-x/lsp_signature.nvim',
-	},
-	config = function()
-		local capabilities = require('blink.cmp').get_lsp_capabilities()
-		-- Basic LSP keymaps
-		local on_attach = function(client, bufnr)
-			local map = function(keys, func, desc)
-				vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc })
-			end
+	{
+		'neovim/nvim-lspconfig',
+		event = { 'BufReadPre', 'BufNewFile' },
+		config = function()
+			vim.diagnostic.config({
+				float = { border = "rounded" },
+				virtual_text = true
+			})
 
-			-- Setup signature help
-			require('lsp_signature').on_attach({
-				bind = true,
-				handler_opts = {
-					border = "rounded"
-				},
-				hint_enable = false,
-				floating_window = true,
-				toggle_key = '<C-k>',
-			}, bufnr)
+			vim.lsp.enable('clangd')
+			vim.lsp.enable('lua_ls')
+			vim.lsp.enable('ts_ls')
+			vim.lsp.enable('eslint')
+			vim.lsp.enable('golps')
+			vim.lsp.enable('pyright')
+			vim.lsp.enable('terraformls')
+			vim.lsp.enable('yamlls')
 
-			map('gd', vim.lsp.buf.definition, 'Goto Definition')
-			map('K', vim.lsp.buf.hover, 'Hover Documentation')
-			map('rf', '<cmd>Telescope lsp_references<cr>', 'Show References')
-			map('<leader>rn', vim.lsp.buf.rename, 'Rename')
-			map('<leader>ca', vim.lsp.buf.code_action, 'Code Action')
+			vim.keymap.set('n', '<c-k>', vim.lsp.buf.hover, {})
+			vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
+			vim.keymap.set('n', '<leader>fmt', vim.lsp.buf.format, {})
+			vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { noremap = true, silent = true })
+			vim.keymap.set({ 'n', 'v' }, '<leader>ca', vim.lsp.buf.code_action, {})
 
-			if client.server_capabilities.documentFormattingProvider then
-				vim.api.nvim_create_autocmd("BufWritePre", {
-					buffer = bufnr,
-					callback = function()
-						vim.lsp.buf.format({ async = false })
-					end,
-				})
-			end
+			vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float, {})
+			vim.keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, {})
+			vim.keymap.set("n", "<leader>dl", vim.diagnostic.goto_prev, {})
 		end
-
-		-- Basic, non-intrusive diagnostics
-		vim.diagnostic.config({
-			virtual_text = {
-				severity = { min = vim.diagnostic.severity.ERROR },
-				spacing = 4,
-				prefix = '●',
-			},
-			signs = true,
-			underline = true,
-			update_in_insert = false,
-			severity_sort = true,
-		})
-
-		-- Setup Mason
-		require('mason').setup()
-		require('mason-lspconfig').setup({
-			ensure_installed = { 'gopls', 'pyright', 'lua_ls', 'yamlls' },
-			automatic_enable = false,
-		})
-
-		-- Configure LSP servers
-		local lspconfig = require('lspconfig')
-		local servers = {
-			gopls = {},
-			pyright = {
-				settings = {
-					python = {
-						analysis = {
-							typeCheckingMode = "off",
-							autoSearchPaths = true,
-							useLibraryCodeForTypes = true,
-							diagnosticMode = "openFilesOnly",
-							autoImports = true,
-							importFormat = "absolute",
-							autoImportCompletions = true,
-						},
-					},
-				},
-			},
-			lua_ls = {
-				settings = {
-					Lua = {
-						diagnostics = {
-							globals = { 'vim' },
-						},
-					},
-				},
-			},
-			yamlls = {
-				settings = {
-					yaml = {
-						schemas = {
-							["https://json.schemastore.org/github-workflow.json"] = "/.github/workflows/*",
-							["https://json.schemastore.org/github-action.json"] = "/.github/action.{yml,yaml}",
-						},
-						validate = true,
-						completion = true,
-						hover = true,
-					},
-				},
-			},
-		}
-
-		-- Setup servers
-		for server, config in pairs(servers) do
-			config.capabilities = capabilities
-			config.on_attach = on_attach
-			lspconfig[server].setup(config)
-		end
-	end,
+	}
 }
