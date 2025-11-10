@@ -7,7 +7,6 @@ return {
 		},
 		build = "make tiktoken",                   -- Only on MacOS or Linux
 		opts = {
-			model = "gpt-4o",
 		},
 	},
 }

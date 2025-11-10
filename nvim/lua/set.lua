@@ -1,6 +1,10 @@
 vim.g.mapleader = ' '
-vim.opt.shiftwidth = 4
 
+-- Tab and indentation settings (4 spaces)
+vim.opt.tabstop = 4        -- Number of spaces a tab character represents
+vim.opt.softtabstop = 4    -- Number of spaces to use when inserting a tab
+vim.opt.shiftwidth = 4     -- Number of spaces for indentation
+vim.opt.expandtab = true   -- Convert tabs to spaces
 
 --  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'

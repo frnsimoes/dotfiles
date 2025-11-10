@@ -98,20 +98,16 @@ automatically-unhide-macos-hidden-apps = true
     cmd-2 = 'workspace 2'
     cmd-3 = 'workspace 3'
     cmd-4 = 'workspace 4'
-    cmd-leftSquareBracket = 'workspace 5'
-    cmd-rightSquareBracket = 'workspace 6'
-    cmd-backslash = 'workspace 7'
-    cmd-backtick = 'workspace 8'
+    cmd-backslash = 'workspace 5'
+    cmd-backtick = 'workspace 6'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     cmd-shift-1 = 'move-node-to-workspace 1'
     cmd-shift-2 = 'move-node-to-workspace 2'
     cmd-shift-3 = 'move-node-to-workspace 3'
     cmd-shift-4 = 'move-node-to-workspace 4'
-    cmd-shift-leftSquareBracket = 'move-node-to-workspace 5'
-    cmd-shift-rightSquareBracket = 'move-node-to-workspace 6'
-    cmd-shift-backslash = 'move-node-to-workspace 7'
-    cmd-shift-backtick = 'move-node-to-workspace 8'
+    cmd-shift-backslash = 'move-node-to-workspace 5'
+    cmd-shift-backtick = 'move-node-to-workspace 6'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
@@ -136,21 +132,27 @@ automatically-unhide-macos-hidden-apps = true
     cmd-shift-k = ['join-with up', 'mode main']
     cmd-shift-l = ['join-with right', 'mode main']
 
-    # down = 'volume down'
-    # up = 'volume up'
-    # shift-down = ['volume set 0', 'mode main']
+ [[on-window-detected]]
+     check-further-callbacks = true
+     run = 'layout floating'
+
+# osascript -e 'id of app "Zed"'
 
 [[on-window-detected]]
-    check-further-callbacks = true
-    run = 'layout floating'
+    if.app-id = 'com.google.Chrome'
+    run = 'move-node-to-workspace 1'
 
 [[on-window-detected]]
-    if.app-id = 'dev.zed.Zed'
+    if.app-id = 'com.mitchellh.ghostty'
     run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
-    if.app-id = 'com.utmapp.UTM'
-    run = 'move-node-to-workspace 4'
+    if.app-id = 'dev.zed.Zed'
+    run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+    if.app-id = 'com.microsoft.VSCode'
+    run = 'move-node-to-workspace 3'
 
 [[on-window-detected]]
     if.app-id = 'com.spotify.client'
@@ -158,10 +160,8 @@ automatically-unhide-macos-hidden-apps = true
 
 [[on-window-detected]]
     if.app-id = 'com.apple.mail'
-    run = 'move-node-to-workspace 7'
+    run = 'move-node-to-workspace 5'
 
 [[on-window-detected]]
     if.app-id = 'ru.keepcoder.Telegram'
     run = 'move-node-to-workspace 6'
-
-

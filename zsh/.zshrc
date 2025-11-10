@@ -33,13 +33,18 @@ export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 . ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/golang/set-env.zsh
 
 
-
 for file in ~/dotfiles/zsh/*.zsh; do
   source "$file"
 done
 
-for file in ~/work/terragrunt-infrastructure/scripts/*.sh; do
+for file in ~/dotfiles/scripts/*.sh; do
     source "$file"
 done
 
-# 192.168.64.3 - ubuntu VM
+alias chp='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --profile-directory="Profile 2"'
+alias chg='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --profile-directory="Profile 6"'
+
+
+export PATH="$(go env GOPATH)/bin:$PATH"
+
+alias claude="/Users/fernandosimoes/.claude/local/claude"
