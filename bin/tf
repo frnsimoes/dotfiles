@@ -1,9 +1,0 @@
-#!/bin/bash
-
-selected_dir=$(find . -type d -not -path '*/.*' 2>/dev/null | fzf --height=40% --border --preview 'ls -la {}')
-
-if [[ -n "$selected_dir" ]]; then
-  cd "$selected_dir"
-else
-  echo "Nenhum diretório selecionado."
-fi
