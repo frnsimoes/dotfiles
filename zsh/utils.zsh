@@ -30,7 +30,23 @@ rb() {
 
 
 gt() {
-    selected_dir=$(find . -type d -not -path '*/.*' 2>/dev/null | fzf --height=40% --border --preview 'ls -la {}')
+    base_dir="${1:-.}"
+    base_dir="$(realpath "$base_dir")"
+    selected_dir=$(find "$base_dir" -type d -not -path '*/.*' 2>/dev/null | fzf --height=40% --border --preview 'ls -la {}')
+    if [ -n "$selected_dir" ]; then
+        cd "$selected_dir"
+        echo "Moved to: $selected_dir"
+    else
+        echo "No directory selected"
+    fi
+}
+
+
+op() {
+    base_dir="${2:-.}"
+    base_dir="$(realpath "$base_dir")"
+    default_depth="${1:-1}"
+    selected_dir=$(find "$base_dir" -maxdepth "$default_depth" -type d -not -path '*/.*' 2>/dev/null | fzf --height=40% --border --preview 'ls -la {}')
     if [ -n "$selected_dir" ]; then
         cd "$selected_dir"
         echo "Moved to: $selected_dir"

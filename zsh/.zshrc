@@ -48,3 +48,9 @@ alias chg='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --prof
 export PATH="$(go env GOPATH)/bin:$PATH"
 
 alias claude="/Users/fernandosimoes/.claude/local/claude"
+
+alias opwork="op 1 ~/work"
+alias opme="op 5 ~/me"
+alias opcode="op 1 ~/code"
+
+
