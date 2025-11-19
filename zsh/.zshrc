@@ -32,25 +32,17 @@ source /opt/homebrew/opt/asdf/libexec/asdf.sh
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 . ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/golang/set-env.zsh
 
-
-for file in ~/dotfiles/zsh/*.zsh; do
+for file in ~/codespace/dotfiles/zsh/*.zsh; do
   source "$file"
 done
 
-for file in ~/dotfiles/scripts/*.sh; do
+for file in ~/codespace/dotfiles/scripts/*.sh; do
     source "$file"
 done
 
 alias chp='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --profile-directory="Profile 2"'
 alias chg='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --profile-directory="Profile 6"'
 
-
 export PATH="$(go env GOPATH)/bin:$PATH"
 
 alias claude="/Users/fernandosimoes/.claude/local/claude"
-
-alias opwork="op 1 ~/work"
-alias opme="op 5 ~/me"
-alias opcode="op 1 ~/code"
-
-
