@@ -18,7 +18,7 @@ gt() {
     base_dir="$(realpath "$base_dir")"
     default_depth="${1:-50}"
 
-    display_depth=5
+    display_depth=3
     selected_dir=$(find "$base_dir" -maxdepth "$default_depth" -type d -not -path '*/.*' 2>/dev/null \
         | awk -v dd="$display_depth" -F/ '{n=NF<dd?1:NF-dd+1; out=$(n); for(i=n+1;i<=NF;i++) out=out"/"$(i); printf "%s\t%s\n", $0, out}' \
         | fzf --height=40% --border --preview 'ls -la {1}' --with-nth=2 \
