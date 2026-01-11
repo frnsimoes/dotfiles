@@ -17,3 +17,20 @@ return {
 		Group.new("LineNrBelow", colorbuddy.colors.custom_white, nil)
 	end
 }
+
+
+
+-- return {
+--   "navarasu/onedark.nvim",
+--   config = function()
+--     require("onedark").setup({
+--       style = "light",   -- aqui está o modo claro
+--     })
+--     require("onedark").load()
+--   end,
+-- }
+
+
+-- return {
+--     'habamax/vim-polar'
+-- }

@@ -1,18 +1,5 @@
 alias curdate='date +%d-%m-%Y'
 
-clean-docker() {
-	echo 'Removing containers'
-	for container in $(docker ps -a | awk '{print $1}'); do
-	    docker rm $container;
-	done
-
-	echo 'Removing unused images'
-	# Remove images
-	for container in $(docker images -a | grep '<none>' | awk '{print $3}'); do
-	    docker rmi $container;
-	done
-}
-
 gt() {
     base_dir="${2:-.}"
     base_dir="$(realpath "$base_dir")"
@@ -29,4 +16,42 @@ gt() {
     else
         echo "No directory selected"
     fi
+}
+
+
+n() {
+    local dir=~/me/notes/${1:-personal}
+    local file
+    file=$(find "$dir" -maxdepth 5 -name '*.md' 2>/dev/null \
+        | fzf --height=40% --border)
+    [ -n "$file" ] && vim "$file"
+}
+
+alias np='n personal'
+alias nw='n work'
+
+trouble() {
+  case "$1" in
+    cpu)
+      echo "mpstat     - CPU per core"
+      echo "pidstat 1  - CPU per processo"
+      echo "top -1     - separated cores"
+      ;;
+    mem)
+      echo "free -h    - overview"
+      echo "vmstat 1   - swap in/out"
+      echo "slabtop    - kernel memory"
+      ;;
+    io)
+      echo "iostat -x 1  - disk details"
+      echo "iotop        - I/O per process"
+      ;;
+    net)
+      echo "ss -tlnp   - open ports"
+      echo "nstat      - TCP counters"
+      ;;
+    *)
+      echo "cpu | mem | io | net"
+      ;;
+  esac
 }

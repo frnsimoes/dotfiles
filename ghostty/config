@@ -21,7 +21,6 @@ clipboard-write = allow
 #
 
 theme=Banana Blueberry
-
-
-
+# theme=Apple System Colors Light
+# theme=Raycast Light
 keybind = shift+enter=text:\x1b\r

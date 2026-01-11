@@ -46,3 +46,6 @@ alias chg='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --prof
 export PATH="$(go env GOPATH)/bin:$PATH"
 
 alias claude="/Users/fernandosimoes/.claude/local/claude"
+export AWS_PROFILE=tintim
+
+alias vim=nvim
