@@ -33,22 +33,23 @@ alias nw='n work'
 trouble() {
   case "$1" in
     cpu)
-      echo "mpstat     - CPU per core"
-      echo "pidstat 1  - CPU per processo"
-      echo "top -1     - separated cores"
+      echo "mpstat            - CPU per core"
+      echo "pidstat 1         - CPU per process | %usr %sys | -p <pid>"
+      echo "top -1            - separated cores"
+      echo "vmstat 5 -w       - us (user s) sy (kernel s) id (idle)"
       ;;
     mem)
-      echo "free -h    - overview"
-      echo "vmstat 1   - swap in/out"
-      echo "slabtop    - kernel memory"
+      echo "free -h           - overview"
+      echo "vmstat 1          - swap in/out"
+      echo "slabtop           - kernel memory"
       ;;
     io)
-      echo "iostat -x 1  - disk details"
-      echo "iotop        - I/O per process"
+      echo "iostat -x 1       - disk details"
+      echo "iotop             - I/O per process"
       ;;
     net)
-      echo "ss -tlnp   - open ports"
-      echo "nstat      - TCP counters"
+      echo "ss -tlnp          - open ports"
+      echo "nstat             - TCP counters"
       ;;
     *)
       echo "cpu | mem | io | net"
