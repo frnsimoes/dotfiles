@@ -8,7 +8,6 @@ account_export_env() {
         return 1
     fi
     
-    # Tenta exportar as credenciais
     if ! eval "$(aws configure export-credentials --format env --profile "$2" 2>&1)"; then
         echo "Token expirado. Fazendo login no SSO..."
         aws sso login --profile "$2"
