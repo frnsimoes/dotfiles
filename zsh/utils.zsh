@@ -24,7 +24,7 @@ n() {
     local file
     file=$(find "$dir" -maxdepth 5 -name '*.md' 2>/dev/null \
         | fzf --height=40% --border)
-    [ -n "$file" ] && vim "$file"
+    [ -n "$file" ] && nvim "$file"
 }
 
 alias np='n personal'
@@ -56,3 +56,24 @@ trouble() {
       ;;
   esac
 }
+
+# Go to definition - Terraform
+tfd() {
+  rg -n "^(resource|module|data|variable|output|locals)\s+.*\b$1\b"
+}
+
+# Go to definition - Python
+pyd() {
+  rg -n "^(def|class)\s+$1\b"
+}
+
+# Find referente
+ref() {
+  rg -n "\b$1\b"
+}
+
+# Find where variable/resource is used - Terraform specific
+tfref() {
+  rg -n "(var\.$1|module\.$1|data\.$1|local\.$1)"
+}
+

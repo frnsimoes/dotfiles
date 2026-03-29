@@ -45,7 +45,10 @@ alias chg='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --prof
 
 export PATH="$(go env GOPATH)/bin:$PATH"
 
-alias claude="/Users/fernandosimoes/.claude/local/claude"
 export AWS_PROFILE=tintim
 
 alias vim=nvim
+export PATH="$HOME/.local/bin:$PATH"
+
+
+alias tmux-restart='tmux kill-server && tmux'
