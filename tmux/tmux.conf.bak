@@ -1,0 +1,72 @@
+set-environment -g LANG en_US.UTF-8
+set-environment -g LC_ALL en_US.UTF-8
+
+# Set the prefix key
+set -g prefix C-t
+
+set -g set-titles off
+set -g default-command "${SHELL}"
+set -g pane-border-format '#{pane_index}: #{pane_title}'
+bind w choose-tree -wF '#{window_name}'
+
+# Reload config
+bind r source-file ~/.tmux.conf \; display "reloaded"
+
+# Bind a key to split pane horizontally
+bind-key b split-window -h -c "#{pane_current_path}" 
+bind-key v split-window -v -c "#{pane_current_path}"
+
+bind-key l select-pane -R
+bind-key h select-pane -L
+bind-key j select-pane -D
+bind-key k select-pane -U
+
+bind t split-window -f -l 15 -c "#{pane_current_path}"
+
+bind r source-file ~/.config/tmux/tmux.conf \; display-message "tmux.conf reloaded!"
+
+# Use vim keybindings in copy mode
+setw -g mode-keys vi
+# Setup 'v' to begin selection as in Vim
+bind-key -T copy-mode-vi v send -X begin-selection
+# Setup 'y' to copy selection as in Vim
+# Use reattach-to-user-namespace with pbcopy on OS X
+# Use xclip on Linux
+set -g set-clipboard off
+if-shell 'test "$(uname -s)" = Darwin' 'bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel "pbcopy"' 'bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel "xclip -i -selection clipboard"'
+
+# Fix for ssh-agent (http://fredkelly.net/articles/2014/10/19/developing_on_yosemite.html)
+set -g update-environment "SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_C"
+
+# Mousemode
+# Toggle mouse on with ^B m
+bind m \
+  set -g mouse on \;\
+  display 'Mouse Mode: ON'
+
+# Toggle mouse off with ^B M
+bind M \
+  set -g mouse off \;\
+
+
+# Default sessions
+# private
+if-shell "tmux has-session -t private 2>/dev/null" "" \
+  "new-session -d -s private; \
+   new-window -t private -n server; \
+   new-window -t private -n journal; \
+   select-window -t private:0"
+
+# if-shell "tmux has-session -t code 2>/dev/null" "" "new-session -d -s code"
+# if-shell "tmux has-session -t server 2>/dev/null" "" "new-session -d -s server"
+
+# work
+if-shell "tmux has-session -t work 2>/dev/null" "" \
+  "new-session -d -s work; \
+   rename-window -t work:0 shell; \
+   new-window -t work -n tintim-infrastructure; \
+   new-window -t work -n k9s; \
+   select-window -t work:0"
+
+bind-key f send-keys "gt 2 ~/codespace/" Enter
+bind-key g send-keys "gt 4 ~/me/" Enter
