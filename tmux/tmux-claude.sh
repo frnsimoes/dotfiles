@@ -1,5 +1,4 @@
 #!/bin/bash
-# ~/.tmux-claude.sh
 
 name=$(tmux display-message -p '#W')
 
