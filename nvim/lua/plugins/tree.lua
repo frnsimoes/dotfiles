@@ -4,7 +4,6 @@ return {
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		"MunifTanjim/nui.nvim",
-		-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
 	},
 	opts = {
 		filesystem = {
@@ -13,19 +12,26 @@ return {
 				show_hidden_count = true,
 				hide_dotfiles = false,
 				hide_gitignored = false,
-				hide_by_name = {
-					-- '.git',
-					-- '.DS_Store',
-					-- 'thumbs.db',
-				},
+				hide_by_name = {},
 			},
 			follow_current_file = {
 				enable = true,
 				leave_dirs_open = false,
 			},
+			window = {
+				mappings = {
+					["Y"] = function(state)
+						local node = state.tree:get_node()
+						local path = node:get_id()
+						vim.fn.setreg("+", path, "c")
+						vim.notify("Copied: " .. path)
+					end,
+				},
+			},
 		},
 	},
-	config = function()
-		vim.api.nvim_set_keymap('n', '<C-b>', ':Neotree<CR>', {noremap = true, silent = true})
-	end
+	config = function(_, opts)
+		require("neo-tree").setup(opts)
+		vim.api.nvim_set_keymap('n', '<C-b>', ':Neotree<CR>', { noremap = true, silent = true })
+	end,
 }

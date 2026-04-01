@@ -41,6 +41,8 @@ tintim_windows=(
   "docs:$W/work/docs"
   "lambdas:$W/work/tintim-lambdas"
   "locals:$W/work/tintim-locals"
+  "alcazar:$W/work/tintim-alcazar"
+  "waha:$W/work/waha-code"
 )
 
 sre_windows=(
@@ -56,23 +58,36 @@ sre_windows=(
 
 personal_windows=(
   "shell:$W"
+  "daily:$W/writing/notes|nvim daily.md"
   "dotfiles:$W/dotfiles"
 )
 
-writing_windows=(
-  "daily:$W/writing/notes|nvim daily.md"
+
+labs_windows=(
+  "shell:$W"
+  "lab:$W/labs"
+  "server:$W"
   "blog:$W/writing/blog"
   "mental-models:$W/writing/mental-models"
+  "linux:$W/projects/linux"
 )
 
-linux_windows=(
+labs_windows=(
   "shell:$W"
+  "lab:$W/labs"
   "server:$W"
+  "blog:$W/writing/blog"
+  "mental-models:$W/writing/mental-models"
   "linux:$W/projects/linux"
+)
+
+
+assistant_windows=(
+  "a-shell:$W"
 )
 
 create_session "tintim" "${tintim_windows[@]}"
 create_session "sre" "${sre_windows[@]}"
 create_session "personal" "${personal_windows[@]}"
-create_session "writing" "${writing_windows[@]}"
-create_session "linux" "${linux_windows[@]}"
+create_session "labs" "${labs_windows[@]}"
+create_session "assistant" "${assistant_windows[@]}"

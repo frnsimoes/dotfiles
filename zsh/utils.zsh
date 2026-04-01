@@ -1,15 +1,26 @@
 alias curdate='date +%d-%m-%Y'
 
 gt() {
-    base_dir="${2:-.}"
+    local base_dir="${1:-.}"
     base_dir="$(realpath "$base_dir")"
-    default_depth="${1:-50}"
 
-    display_depth=3
-    selected_dir=$(find "$base_dir" -maxdepth "$default_depth" -type d -not -path '*/.*' 2>/dev/null \
-        | awk -v dd="$display_depth" -F/ '{n=NF<dd?1:NF-dd+1; out=$(n); for(i=n+1;i<=NF;i++) out=out"/"$(i); printf "%s\t%s\n", $0, out}' \
-        | fzf --height=40% --border --preview 'ls -la {1}' --with-nth=2 \
-        | cut -f1)
+    local selected_dir
+    selected_dir=$(
+        find "$base_dir" \
+            \( -name '.*' -o -name 'node_modules' -o -name '__pycache__' \
+               -o -name 'dist' -o -name '.tox' \) -prune \
+            -o -type d -print 2>/dev/null |
+        awk -F/ '{
+            n = NF < 4 ? 1 : NF - 3
+            out = $(n)
+            for (i = n+1; i <= NF; i++) out = out "/" $(i)
+            printf "%s\t%s\n", $0, out
+        }' |
+        fzf --height=40% --border --scheme=path \
+            --preview 'ls -la {1}' \
+            --with-nth=2 |
+        cut -f1
+    )
 
     if [ -n "$selected_dir" ]; then
         cd "$selected_dir"
