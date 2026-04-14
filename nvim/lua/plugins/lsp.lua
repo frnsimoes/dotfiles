@@ -8,6 +8,16 @@ return {
 				virtual_text = true
 			})
 
+			vim.lsp.config('clangd', {
+				cmd = {
+					'clangd',
+					'--offset-encoding=utf-16',
+					'--background-index',
+					'--query-driver=/usr/bin/clang*,/usr/bin/gcc*,/opt/homebrew/bin/clang*,/opt/homebrew/bin/gcc*',
+					'--header-insertion=never',
+					'--clang-tidy=false',
+				},
+			})
 			vim.lsp.enable('clangd')
 			vim.lsp.enable('lua_ls')
 			vim.lsp.enable('ts_ls')
