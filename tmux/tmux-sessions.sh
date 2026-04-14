@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source "$HOME/.config/tmux/tmux-session-manage.sh"
-
-session_start personal
-session_start labs
+for session in personal labs logs; do
+    bash "$HOME/.config/tmux/tmux-session-manage.sh" start "$session"
+done
