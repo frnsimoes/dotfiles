@@ -53,3 +53,6 @@ export PATH="$HOME/.local/bin:$PATH"
 
 alias tmux-restart='tmux kill-server && tmux'
 PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
+
+export PATH="/opt/homebrew/bin:$PATH"
+source /Users/fernandosimoes/.zsh_kraft_completion;
