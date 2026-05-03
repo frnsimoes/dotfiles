@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# claude-find: fzf picker over all Claude Code sessions across cwds.
+# Resumes the picked session in its original working directory.
+set -euo pipefail
+
+PROJECTS="${HOME}/.claude/projects"
+[ -d "$PROJECTS" ] || { echo "no $PROJECTS" >&2; exit 1; }
+
+emit() {
+  local f sid mtime mtime_h cwd title last first short
+  for f in "$PROJECTS"/*/*.jsonl; do
+    [ -s "$f" ] || continue
+    sid="$(basename "$f" .jsonl)"
+    mtime="$(stat -f %m "$f")"
+    mtime_h="$(date -r "$mtime" +'%Y-%m-%d %H:%M')"
+    # Leading "_" placeholder prevents bash `read` from collapsing an empty first field.
+    if ! IFS=$'\t' read -r _ title cwd first last < <(jq -rs '
+      def s(x): if (x|type)=="string" then x else (x|tojson) end;
+      ["_",
+        ([.[] | select(.type=="ai-title") | .aiTitle] | last // ""),
+        ([.[] | select(.type=="user") | .cwd]        | first // ""),
+        ([.[] | select(.type=="user") | s(.message.content)] | first // ""),
+        ([.[] | select(.type=="last-prompt") | .lastPrompt] | last // "")
+      ] | @tsv
+    ' "$f" 2>/dev/null); then
+      continue
+    fi
+    [ -z "$title" ] && title="${first:0:80}"
+    [ -z "$title" ] && title="(no title)"
+    title="${title//$'\n'/ }"
+    last="${last//$'\n'/ }"
+    last="${last:0:160}"
+    short="${cwd/#$HOME/~}"
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$mtime" "$mtime_h" "$title" "$short" "$last" "$sid" "$cwd"
+  done
+}
+
+sel="$(emit | sort -t $'\t' -k1,1nr | fzf \
+  --delimiter=$'\t' \
+  --with-nth=2,3,4 \
+  --preview='printf "Title:    %s\nCwd:      %s\nDate:     %s\nSession:  %s\n\nLast prompt:\n%s\n" {3} {7} {2} {6} {5}' \
+  --preview-window='down:8:wrap' \
+  --height=85% --reverse \
+  --prompt='claude> ' \
+  --header='enter=resume in original cwd  esc=cancel'
+)" || exit 0
+
+[ -z "$sel" ] && exit 0
+
+sid="$(printf '%s' "$sel" | cut -f6)"
+cwd="$(printf '%s' "$sel" | cut -f7)"
+[ -d "$cwd" ] || { echo "original cwd no longer exists: $cwd" >&2; exit 1; }
+cd "$cwd"
+exec claude --resume "$sid"
