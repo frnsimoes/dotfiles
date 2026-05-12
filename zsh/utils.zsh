@@ -1,26 +1,35 @@
 alias curdate='date +%d-%m-%Y'
 
 gt() {
+    // requires fd (brew install fd)
     local base_dir="${1:-.}"
     base_dir="$(realpath "$base_dir")"
 
     local selected_dir
-    selected_dir=$(
-        find "$base_dir" \
-            \( -name '.*' -o -name 'node_modules' -o -name '__pycache__' \
-               -o -name 'dist' -o -name '.tox' \) -prune \
-            -o -type d -print 2>/dev/null |
-        awk -F/ '{
-            n = NF < 4 ? 1 : NF - 3
-            out = $(n)
-            for (i = n+1; i <= NF; i++) out = out "/" $(i)
-            printf "%s\t%s\n", $0, out
-        }' |
-        fzf --height=40% --border --scheme=path \
-            --preview 'ls -la {1}' \
-            --with-nth=2 |
-        cut -f1
-    )
+    if command -v fd >/dev/null 2>&1; then
+        selected_dir=$(
+            fd --type d --hidden --follow \
+               --exclude .git --exclude node_modules --exclude __pycache__ \
+               --exclude dist --exclude .tox --exclude .venv --exclude venv \
+               --exclude target --exclude build --exclude .terraform \
+               . "$base_dir" |
+            fzf --height=40% --border --scheme=path --tiebreak=end \
+                --preview 'ls -la {}' \
+                --delimiter=/ --with-nth=-4..
+        )
+    else
+        selected_dir=$(
+            find "$base_dir" \
+                \( -name '.*' -o -name 'node_modules' -o -name '__pycache__' \
+                   -o -name 'dist' -o -name '.tox' -o -name '.venv' \
+                   -o -name 'venv' -o -name 'target' -o -name 'build' \
+                   -o -name '.terraform' \) -prune \
+                -o -type d -print 2>/dev/null |
+            fzf --height=40% --border --scheme=path --tiebreak=end \
+                --preview 'ls -la {}' \
+                --delimiter=/ --with-nth=-4..
+        )
+    fi
 
     if [ -n "$selected_dir" ]; then
         cd "$selected_dir"
