@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+#
+# install — copy the ariad-sre template surface into the current project.
+#
+# Run this from inside the target project. The project is always $(pwd).
+# Existing files are never overwritten (so a re-run won't clobber filled-in
+# briefings, decisions, etc.); they are reported as skipped.
+
+set -euo pipefail
+
+# Resolve the ariad-sre repo root. The script may be invoked from inside the
+# repo, or from a copy/symlink placed on the PATH (e.g. ~/workspace/dotfiles),
+# so we cannot always rely on the script's own location. Priority:
+#   1. $ARIAD_SRE_HOME if set
+#   2. the repo this script lives in (when run from inside ariad-sre)
+#   3. a known default location
+find_repo_root() {
+  if [ -n "${ARIAD_SRE_HOME:-}" ]; then
+    echo "$ARIAD_SRE_HOME"
+    return
+  fi
+  local script_dir
+  script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  if [ -d "$script_dir/../docs/project-templates" ]; then
+    (cd "$script_dir/.." && pwd)
+    return
+  fi
+  echo "$HOME/workspace/projects/ariad-sre"
+}
+
+REPO_ROOT="$(find_repo_root)"
+TEMPLATES="$REPO_ROOT/docs/project-templates"
+
+PROJECT="$(pwd)"
+
+if [ ! -d "$TEMPLATES" ]; then
+  echo "error: templates not found at $TEMPLATES" >&2
+  echo "       set ARIAD_SRE_HOME to the ariad-sre repo root and re-run." >&2
+  exit 1
+fi
+
+if [ "$PROJECT" = "$REPO_ROOT" ]; then
+  echo "error: refusing to install into the ariad-sre repo itself." >&2
+  echo "       cd into your target project and run this script from there." >&2
+  exit 1
+fi
+
+# Source (relative to the templates dir) -> destination (relative to project).
+files=(
+  "AGENTS.md:AGENTS.md"
+  "docs/project/briefing.md:docs/project/briefing.md"
+  "docs/project/decisions.md:docs/project/decisions.md"
+  "docs/project/roadmap/index.md:docs/project/roadmap/index.md"
+  "docs/project/debt.md:docs/project/debt.md"
+  "docs/project/capacity-model.md:docs/project/capacity-model.md"
+  "docs/project/runbooks/index.md:docs/project/runbooks/index.md"
+  "docs/process/development-guide.md:docs/process/development-guide.md"
+  "docs/process/worklog.md:docs/process/worklog.md"
+  "docs/service/principles.md:docs/service/principles.md"
+)
+
+echo "Installing ariad-sre templates into: $PROJECT"
+echo
+
+copied=0
+skipped=0
+for entry in "${files[@]}"; do
+  src="$TEMPLATES/${entry%%:*}"
+  dst="$PROJECT/${entry##*:}"
+
+  if [ ! -f "$src" ]; then
+    echo "  ! missing template: $src" >&2
+    continue
+  fi
+  if [ -e "$dst" ]; then
+    echo "  skip  ${entry##*:} (already exists)"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  mkdir -p "$(dirname "$dst")"
+  cp "$src" "$dst"
+  echo "  copy  ${entry##*:}"
+  copied=$((copied + 1))
+done
+
+echo
+echo "Done: $copied copied, $skipped skipped."
+echo "Next: open a coding-agent session here and run agent-assisted initialization"
+echo "to draft briefing.md, service/principles.md, roadmap, and development-guide.md."

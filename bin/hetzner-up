@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SERVER_NAME="${HETZNER_SERVER_NAME:-ubuntu}"
+SERVER_TYPE="${HETZNER_SERVER_TYPE:-cx23}"
+IMAGE="${HETZNER_IMAGE:-ubuntu-24.04}"
+SSH_KEY="${HETZNER_SSH_KEY:-frn}"
+USER_DATA="${HETZNER_USER_DATA:-$HOME/workspace/dotfiles/server/cloud-init.yaml}"
+CURRENT_IP_FILE="${HETZNER_CURRENT_IP_FILE:-$HOME/currentip}"
+
+hcloud server create \
+  --name "$SERVER_NAME" \
+  --type "$SERVER_TYPE" \
+  --image "$IMAGE" \
+  --ssh-key "$SSH_KEY" \
+  --user-data-from-file "$USER_DATA"
+
+IP=$(hcloud server ip "$SERVER_NAME")
+echo "$IP" > "$CURRENT_IP_FILE"
+ssh-keygen -R "$IP" >/dev/null 2>&1 || true
+until nc -z "$IP" 22 2>/dev/null; do sleep 2; done
+ssh -o StrictHostKeyChecking=accept-new root@"$IP"

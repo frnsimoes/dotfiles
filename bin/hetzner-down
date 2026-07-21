@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SERVER_NAME="${HETZNER_SERVER_NAME:-ubuntu}"
+
+hcloud server delete "$SERVER_NAME"
