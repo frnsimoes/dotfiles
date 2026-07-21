@@ -39,64 +39,6 @@ gt() {
 }
 
 
-n() {
-    local dir=~/me/notes/${1:-personal}
-    local file
-    file=$(find "$dir" -maxdepth 5 -name '*.md' 2>/dev/null \
-        | fzf --height=40% --border)
-    [ -n "$file" ] && nvim "$file"
-}
-
-alias np='n personal'
-alias nw='n work'
-
-trouble() {
-  case "$1" in
-    cpu)
-      echo "mpstat            - CPU per core"
-      echo "pidstat 1         - CPU per process | %usr %sys | -p <pid>"
-      echo "top -1            - separated cores"
-      echo "vmstat 5 -w       - us (user s) sy (kernel s) id (idle)"
-      ;;
-    mem)
-      echo "free -h           - overview"
-      echo "vmstat 1          - swap in/out"
-      echo "slabtop           - kernel memory"
-      ;;
-    io)
-      echo "iostat -x 1       - disk details"
-      echo "iotop             - I/O per process"
-      ;;
-    net)
-      echo "ss -tlnp          - open ports"
-      echo "nstat             - TCP counters"
-      ;;
-    *)
-      echo "cpu | mem | io | net"
-      ;;
-  esac
-}
-
-# Go to definition - Terraform
-tfd() {
-  rg -n "^(resource|module|data|variable|output|locals)\s+.*\b$1\b"
-}
-
-# Go to definition - Python
-pyd() {
-  rg -n "^(def|class)\s+$1\b"
-}
-
-# Find referente
-ref() {
-  rg -n "\b$1\b"
-}
-
-# Find where variable/resource is used - Terraform specific
-tfref() {
-  rg -n "(var\.$1|module\.$1|data\.$1|local\.$1)"
-}
-
 podscount() {
     kubectl get pods -n whatsapp -o wide --no-headers | awk '{print $7}' | sort | uniq -c | sort -rn
 }
