@@ -1,0 +1,32 @@
+#cloud-config
+package_update: true
+package_upgrade: false
+packages:
+  - vim
+  - git
+  - curl
+  - build-essential
+  - clang
+  - llvm
+  - libelf-dev
+  - libbpf-dev
+  - bpftrace
+  - bpfcc-tools
+  - strace
+runcmd:
+  - apt-get install -y "linux-headers-$(uname -r)" linux-tools-common "linux-tools-$(uname -r)" linux-tools-generic || true
+  - install -m 0755 -d /etc/apt/keyrings
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  - chmod a+r /etc/apt/keyrings/docker.asc
+  - echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" > /etc/apt/sources.list.d/docker.list
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+  - systemctl enable --now docker
+  - usermod -aG docker root
+  - bpftrace --version || true
+  - docker compose version || true
+write_files:
+  - path: /etc/sysctl.d/99-bpf.conf
+    content: |
+      kernel.perf_event_paranoid = 1
+      kernel.unprivileged_bpf_disabled = 0
