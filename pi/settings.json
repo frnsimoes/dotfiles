@@ -1,0 +1,17 @@
+{
+  "packages": [
+    "git:github.com/picassio/pi-cc-patch",
+    "npm:pi-mcp-adapter",
+    "npm:pi-vim",
+    "npm:split-editor"
+  ],
+  "lastChangelogVersion": "0.80.2",
+  "theme": "light",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-opus-4-8",
+  "images": {
+    "blockImages": false
+  },
+  "defaultThinkingLevel": "high",
+  "hideThinkingBlock": true
+}
