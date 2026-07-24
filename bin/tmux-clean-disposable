@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Kill every tmux window named "disposable" across all sessions.
+set -euo pipefail
+
+name="${1:-disposable}"
+
+tmux list-windows -a -f "#{==:#{window_name},$name}" -F '#{window_id}' |
+    while read -r id; do
+        [ -n "$id" ] && tmux kill-window -t "$id"
+    done
