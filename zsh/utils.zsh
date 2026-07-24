@@ -1,5 +1,15 @@
 alias curdate='date +%d-%m-%Y'
 
+# Bare `tmux` starts the server (building the default sessions from tmux.conf)
+# and lands you in the 'shell' session. `tmux <args>` behaves normally.
+tmux() {
+    if [ $# -eq 0 ]; then
+        command tmux new -A -s shell
+    else
+        command tmux "$@"
+    fi
+}
+
 gt() {
     // requires fd (brew install fd)
     local base_dir="${1:-.}"

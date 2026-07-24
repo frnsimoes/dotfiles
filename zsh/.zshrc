@@ -2,6 +2,8 @@ ZSH_THEME="robbyrussell"
 
 plugins=(git)
 
+set -o vi
+
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -53,3 +55,4 @@ PATH="/opt/homebrew/opt/make/libexec/gnubin:$PATH"
 export PATH="/opt/homebrew/bin:$PATH"
 source /Users/fernandosimoes/.zsh_kraft_completion;
 
+export FZF_DEFAULT_OPTS='--color=light,bg+:194,fg+:22,hl+:28,gutter:-1,pointer:28,marker:28'
