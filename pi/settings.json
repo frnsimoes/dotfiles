@@ -13,5 +13,5 @@
     "blockImages": false
   },
   "defaultThinkingLevel": "high",
-  "hideThinkingBlock": true
+  "hideThinkingBlock": false
 }
