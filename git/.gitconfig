@@ -21,7 +21,7 @@
 
 [delta]
     navigate = true  
-    dark = true      
+    light = true
 	side-by-side = true
     hyperlinks = true
 
