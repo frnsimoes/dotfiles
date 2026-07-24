@@ -2,7 +2,7 @@ ZSH_THEME="robbyrussell"
 
 plugins=(git)
 
-set -o vi
+source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
 export LANG=en_US.UTF-8
 export LANGUAGE=en_US.UTF-8
@@ -56,3 +56,4 @@ export PATH="/opt/homebrew/bin:$PATH"
 source /Users/fernandosimoes/.zsh_kraft_completion;
 
 export FZF_DEFAULT_OPTS='--color=light,bg+:194,fg+:22,hl+:28,gutter:-1,pointer:28,marker:28'
+
