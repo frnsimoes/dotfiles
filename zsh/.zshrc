@@ -29,10 +29,10 @@ autoload -Uz compinit
 compinit
 eval "$(zoxide init zsh)"
 
-# asdf
-source /opt/homebrew/opt/asdf/libexec/asdf.sh
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-. ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/golang/set-env.zsh
+# # asdf
+# source /opt/homebrew/opt/asdf/libexec/asdf.sh
+# export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+# . ${ASDF_DATA_DIR:-$HOME/.asdf}/plugins/golang/set-env.zsh
 
 for file in ~/workspace/dotfiles/zsh/*.zsh; do
   source "$file"
