@@ -5,7 +5,7 @@
     "npm:pi-vim",
     "npm:split-editor"
   ],
-  "lastChangelogVersion": "0.80.2",
+  "lastChangelogVersion": "0.84.2",
   "theme": "light",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
