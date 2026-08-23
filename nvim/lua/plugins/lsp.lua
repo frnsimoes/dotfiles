@@ -19,12 +19,13 @@ return {
 				},
 			})
 			vim.lsp.enable('clangd')
+			vim.lsp.enable('rust-analyzer')
 			vim.lsp.enable('lua_ls')
 			vim.lsp.enable('ts_ls')
 			vim.lsp.enable('eslint')
 			vim.lsp.enable('gopls')
 			vim.lsp.enable('pyright')
-			vim.lsp.enable('terraformls')
+			-- vim.lsp.enable('terraformls')
 			vim.lsp.enable('yamlls')
 			vim.lsp.enable('bashls')
 
