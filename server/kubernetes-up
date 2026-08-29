@@ -1,0 +1,222 @@
+#!/usr/bin/env bash
+# Bootstrap a single-node kubeadm cluster for the UTM lab.
+# It intentionally uses upstream Kubernetes, containerd, and Cilium; it does
+# not install k3s, kind, minikube, or Docker Desktop Kubernetes.
+set -Eeuo pipefail
+
+KUBERNETES_MINOR="${KUBERNETES_MINOR:-v1.32}"
+CILIUM_VERSION="${CILIUM_VERSION:-1.17.2}"
+CILIUM_CLI_VERSION="${CILIUM_CLI_VERSION:-0.18.4}"
+POD_CIDR="${POD_CIDR:-10.244.0.0/16}"
+SERVICE_CIDR="${SERVICE_CIDR:-10.96.0.0/12}"
+RUN_CILIUM_CONNECTIVITY_TEST="${RUN_CILIUM_CONNECTIVITY_TEST:-1}"
+
+if [ "${EUID}" -ne 0 ]; then
+  exec sudo --preserve-env=KUBERNETES_MINOR,CILIUM_VERSION,CILIUM_CLI_VERSION,POD_CIDR,SERVICE_CIDR,RUN_CILIUM_CONNECTIVITY_TEST \
+    "$0" "$@"
+fi
+
+if [ ! -r /etc/os-release ]; then
+  printf 'This script requires an Ubuntu or Debian host.\n' >&2
+  exit 1
+fi
+. /etc/os-release
+case "${ID}" in
+  ubuntu|debian) ;;
+  *) printf 'This script requires Ubuntu or Debian; found %s.\n' "${ID}" >&2; exit 1 ;;
+esac
+
+log() {
+  printf '\n==> %s\n' "$*"
+}
+
+require_cgroup_v2() {
+  if [ "$(stat -fc %T /sys/fs/cgroup)" != "cgroup2fs" ]; then
+    printf 'cgroup v2 is required. Boot this host with systemd.unified_cgroup_hierarchy=1.\n' >&2
+    exit 1
+  fi
+}
+
+configure_host() {
+  log 'Configuring kernel modules, sysctls, swap, and cgroup v2'
+  require_cgroup_v2
+
+  swapoff -a
+  sed -ri '/\sswap\s/s/^[[:space:]]*([^#])/#\1/' /etc/fstab
+
+  install -d -m 0755 /etc/modules-load.d /etc/sysctl.d
+  cat >/etc/modules-load.d/kubernetes.conf <<'EOF'
+overlay
+br_netfilter
+EOF
+  modprobe overlay
+  modprobe br_netfilter
+
+  cat >/etc/sysctl.d/99-kubernetes-cilium.conf <<'EOF'
+net.ipv4.ip_forward = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+# Cilium loads BPF programs from privileged pods. Do not enable unprivileged BPF.
+kernel.unprivileged_bpf_disabled = 1
+EOF
+  sysctl --system >/dev/null
+}
+
+install_containerd() {
+  log 'Installing and configuring containerd'
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y ca-certificates curl gpg jq
+
+  install -d -m 0755 /etc/apt/keyrings
+  curl -fsSL "https://download.docker.com/linux/${ID}/gpg" \
+    | gpg --dearmor --yes -o /etc/apt/keyrings/docker.gpg
+  chmod a+r /etc/apt/keyrings/docker.gpg
+  printf 'deb [arch=%s signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/%s %s stable\n' \
+    "$(dpkg --print-architecture)" "${ID}" "${VERSION_CODENAME}" \
+    >/etc/apt/sources.list.d/docker.list
+
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y containerd.io
+  install -d -m 0755 /etc/containerd
+  containerd config default >/etc/containerd/config.toml
+  sed -ri 's/^([[:space:]]*SystemdCgroup = )false/\1true/' /etc/containerd/config.toml
+  systemctl enable --now containerd
+  systemctl restart containerd
+}
+
+install_kubernetes() {
+  if command -v kubelet >/dev/null && command -v kubeadm >/dev/null && command -v kubectl >/dev/null; then
+    log "Using installed Kubernetes packages ($(kubeadm version -o short))"
+    apt-mark hold kubelet kubeadm kubectl
+    systemctl enable --now kubelet
+    return
+  fi
+
+  log "Installing Kubernetes packages from ${KUBERNETES_MINOR}"
+  install -d -m 0755 /etc/apt/keyrings
+  curl -fsSL "https://pkgs.k8s.io/core:/stable:/${KUBERNETES_MINOR}/deb/Release.key" \
+    | gpg --dearmor --yes -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  printf 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/%s/deb/ /\n' \
+    "${KUBERNETES_MINOR}" >/etc/apt/sources.list.d/kubernetes.list
+
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y kubelet kubeadm kubectl
+  apt-mark hold kubelet kubeadm kubectl
+  systemctl enable --now kubelet
+}
+
+install_cilium_cli() {
+  local arch archive checksum tmpdir
+  case "$(dpkg --print-architecture)" in
+    amd64) arch=amd64 ;;
+    arm64) arch=arm64 ;;
+    *) printf 'No Cilium CLI release architecture for %s.\n' "$(dpkg --print-architecture)" >&2; exit 1 ;;
+  esac
+
+  log "Installing Cilium CLI ${CILIUM_CLI_VERSION}"
+  tmpdir="$(mktemp -d)"
+  archive="${tmpdir}/cilium-linux-${arch}.tar.gz"
+  checksum="${tmpdir}/cilium-linux-${arch}.tar.gz.sha256sum"
+  curl -fsSL "https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${arch}.tar.gz" \
+    -o "${archive}"
+  curl -fsSL "https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${arch}.tar.gz.sha256sum" \
+    -o "${checksum}"
+  (cd "${tmpdir}" && sha256sum --check --status "$(basename "${checksum}")")
+  tar -xzf "${archive}" -C /usr/local/bin cilium
+  rm -rf "${tmpdir}"
+}
+
+bootstrap_control_plane() {
+  if [ -f /etc/kubernetes/admin.conf ]; then
+    log 'A kubeadm control plane already exists; skipping kubeadm init'
+    return
+  fi
+
+  log 'Initializing the kubeadm control plane without kube-proxy'
+  kubeadm init \
+    --cri-socket unix:///run/containerd/containerd.sock \
+    --pod-network-cidr "${POD_CIDR}" \
+    --service-cidr "${SERVICE_CIDR}" \
+    --skip-phases=addon/kube-proxy
+}
+
+configure_kubeconfig() {
+  local kube_user kube_home
+  kube_user="${SUDO_USER:-root}"
+  kube_home="$(getent passwd "${kube_user}" | cut -d: -f6)"
+  [ -n "${kube_home}" ] || kube_home=/root
+
+  install -d -m 0700 -o "${kube_user}" -g "${kube_user}" "${kube_home}/.kube"
+  install -m 0600 -o "${kube_user}" -g "${kube_user}" /etc/kubernetes/admin.conf "${kube_home}/.kube/config"
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+}
+
+install_cilium() {
+  local api_server api_host api_port
+  api_server="$(kubectl config view --raw --minify -o jsonpath='{.clusters[0].cluster.server}')"
+  api_host="${api_server#https://}"
+  api_host="${api_host%%:*}"
+  api_port="${api_server##*:}"
+
+  log "Installing Cilium ${CILIUM_VERSION} as the eBPF CNI and kube-proxy replacement"
+  cilium install --version "${CILIUM_VERSION}" \
+    --set ipam.mode=kubernetes \
+    --set kubeProxyReplacement=true \
+    --set k8sServiceHost="${api_host}" \
+    --set k8sServicePort="${api_port}" \
+    --set routingMode=native \
+    --set ipv4NativeRoutingCIDR="${POD_CIDR}" \
+    --set autoDirectNodeRoutes=true \
+    --set bpf.masquerade=true \
+    --set hubble.relay.enabled=true \
+    --set hubble.ui.enabled=true \
+    --set operator.replicas=1
+
+  cilium status --wait --wait-duration 5m
+}
+
+make_single_node_schedulable() {
+  local node
+  node="$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')"
+  log "Allowing workloads on the only node (${node})"
+  kubectl taint nodes "${node}" node-role.kubernetes.io/control-plane- || true
+  kubectl label nodes "${node}" node-role.kubernetes.io/worker= --overwrite
+  kubectl -n kube-system rollout status deployment/coredns --timeout=5m
+}
+
+record_versions() {
+  cat >/etc/kubernetes-lab.env <<EOF
+KUBERNETES_MINOR=${KUBERNETES_MINOR}
+KUBERNETES_VERSION=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
+CILIUM_VERSION=${CILIUM_VERSION}
+CILIUM_CLI_VERSION=${CILIUM_CLI_VERSION}
+POD_CIDR=${POD_CIDR}
+SERVICE_CIDR=${SERVICE_CIDR}
+EOF
+}
+
+main() {
+  configure_host
+  install_containerd
+  install_kubernetes
+  install_cilium_cli
+  bootstrap_control_plane
+  configure_kubeconfig
+  install_cilium
+  make_single_node_schedulable
+
+  record_versions
+
+  if [ "${RUN_CILIUM_CONNECTIVITY_TEST}" = 1 ]; then
+    log 'Running the Cilium connectivity test'
+    cilium connectivity test --test-namespace cilium-test
+  fi
+
+  log 'Cluster is ready'
+  kubectl get nodes -o wide
+  kubectl get pods --all-namespaces
+  printf '\nKubeconfig: %s/.kube/config\n' "$(getent passwd "${SUDO_USER:-root}" | cut -d: -f6)"
+  printf 'Hubble UI: kubectl -n kube-system port-forward svc/hubble-ui 12000:80\n'
+}
+
+main "$@"

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SERVER_NAME="${HETZNER_SERVER_NAME:-ubuntu}"
+SERVER_TYPE="${HETZNER_SERVER_TYPE:-cx23}"
+IMAGE="${HETZNER_IMAGE:-ubuntu-24.04}"
+SSH_KEY="${HETZNER_SSH_KEY:-frn}"
+LOCATION="${HETZNER_LOCATION:-}"
+USER_DATA="${HETZNER_USER_DATA:-$HOME/workspace/dotfiles/server/cloud-init.yaml}"
+IP_FILE="${HETZNER_CURRENT_IP_FILE:-$HOME/currentip}"
+
+args=(--name "$SERVER_NAME" --type "$SERVER_TYPE" --image "$IMAGE"
+      --ssh-key "$SSH_KEY" --user-data-from-file "$USER_DATA")
+[ -n "$LOCATION" ] && args+=(--location "$LOCATION")
+hcloud server create "${args[@]}"
+
+IP=$(hcloud server ip "$SERVER_NAME")
+echo "$IP" >"$IP_FILE"
+ssh-keygen -R "$IP" >/dev/null 2>&1 || true
+
+ssh_opts=(-o StrictHostKeyChecking=accept-new -o ConnectTimeout=10)
+until nc -z "$IP" 22 2>/dev/null; do sleep 2; done
+until ssh "${ssh_opts[@]}" -o BatchMode=yes root@"$IP" true 2>/dev/null; do sleep 2; done
+ssh "${ssh_opts[@]}" root@"$IP" 'cloud-init status --wait || true'
+
+echo "ready: ssh root@$IP"
+
+[ -t 0 ] && [ -t 1 ] && exec ssh "${ssh_opts[@]}" root@"$IP"

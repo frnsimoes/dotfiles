@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+VM="${UTM_LAB_VM:-lab}"
+USER="${UTM_LAB_USER:-frn}"
+KEY="${UTM_LAB_KEY:-$HOME/.ssh/id_ed25519}"
+
+if [ "$(utmctl status "$VM")" = "stopped" ]; then
+  utmctl start --hide "$VM"
+fi
+
+for _ in $(seq 1 30); do
+  IP="$(utmctl ip-address "$VM" | awk '/^[0-9]+\./ { print; exit }')"
+  if [ -n "$IP" ] && nc -G 1 -z "$IP" 22 2>/dev/null; then
+    exec ssh -i "$KEY" -o IdentitiesOnly=yes \
+      -o StrictHostKeyChecking=accept-new \
+      -o UserKnownHostsFile="$HOME/.ssh/known_hosts.utm-lab" \
+      "$USER@$IP" "$@"
+  fi
+  sleep 1
+done
+
+printf 'SSH did not become available for UTM VM %q\n' "$VM" >&2
+exit 1

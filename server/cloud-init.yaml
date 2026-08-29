@@ -5,6 +5,8 @@ packages:
   - vim
   - git
   - curl
+  - ca-certificates
+  - gpg
   - build-essential
   - clang
   - llvm
@@ -25,8 +27,40 @@ runcmd:
   - usermod -aG docker root
   - bpftrace --version || true
   - docker compose version || true
+  - |
+    set -eux
+    swapoff -a
+    sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
+    modprobe overlay
+    modprobe br_netfilter
+    sysctl --system
+
+    # Resolve once during provisioning, then hold this minor version.
+    KUBERNETES_VERSION="$(curl -fsSL https://dl.k8s.io/release/stable.txt)"
+    KUBERNETES_MINOR="${KUBERNETES_VERSION%.*}"
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/${KUBERNETES_MINOR}/deb/Release.key" \
+      | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/${KUBERNETES_MINOR}/deb/ /" \
+      > /etc/apt/sources.list.d/kubernetes.list
+    apt-get update
+    apt-get install -y kubelet kubeadm kubectl
+    apt-mark hold kubelet kubeadm kubectl
+    printf '%s\n' "$KUBERNETES_VERSION" > /etc/kubernetes-version
+
+    containerd config default > /etc/containerd/config.toml
+    sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+    systemctl restart containerd
+    systemctl enable --now kubelet
 write_files:
+  - path: /etc/modules-load.d/kubernetes.conf
+    content: |
+      overlay
+      br_netfilter
   - path: /etc/sysctl.d/99-bpf.conf
     content: |
       kernel.perf_event_paranoid = 1
       kernel.unprivileged_bpf_disabled = 0
+      net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+      net.ipv4.ip_forward = 1
