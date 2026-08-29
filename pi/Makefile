@@ -2,7 +2,7 @@ PI_DIR := $(HOME)/.pi/agent
 
 # Each entry is a config item symlinked from this repo into $(PI_DIR).
 # Runtime/secret files (auth.json, npm/, sessions/, mcp-*cache*) are NOT tracked.
-ITEMS := extensions settings.json mcp.json
+ITEMS := extensions settings.json mcp.json AGENTS.md
 
 .PHONY: install link unlink status
 

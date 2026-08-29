@@ -3,12 +3,13 @@
     "git:github.com/picassio/pi-cc-patch",
     "npm:pi-mcp-adapter",
     "npm:pi-vim",
-    "npm:split-editor"
+    "npm:split-editor",
+    "npm:pi-vimmode"
   ],
   "lastChangelogVersion": "0.84.2",
   "theme": "light",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-4-8",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-terra",
   "images": {
     "blockImages": false
   },
