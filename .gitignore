@@ -1,4 +1,8 @@
 .DS_Store
 .claude
 pi/AGENTS.md
+newsboat/cache.db
+newsboat/history.cmdline
+
+cache.db        config          history.cmdline urls
 
