@@ -171,8 +171,6 @@ install_cilium() {
     --set hubble.relay.enabled=true \
     --set hubble.ui.enabled=true \
     --set operator.replicas=1
-
-  cilium status --wait --wait-duration 5m
 }
 
 make_single_node_schedulable() {
@@ -204,6 +202,7 @@ main() {
   configure_kubeconfig
   install_cilium
   make_single_node_schedulable
+  cilium status --wait --wait-duration 5m
 
   record_versions
 
